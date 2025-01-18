@@ -1,22 +1,18 @@
-from flask import Flask, render_template, request, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
-from models import db
-from models.tabelas import Alunos
+from flask import Flask, render_template, request, redirect, url_for, flash, session,make_response
+from flask_mysqldb import MySQL
 import os
-from dotenv import load_dotenv
+app = Flask(__name__)
 
-load_dotenv()
+app.config['SECRET_KEY'] = 'senha'
 
-app  = Flask(__name__)
+# Configurações do MySQL
+app.config['MYSQL_HOST'] = 'localhost' 
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = os.getenv('SENHA')
+app.config['MYSQL_DB'] = 'db_academico'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
-
-
-with app.app_context():
-    db.create_all()
+mysql = MySQL(app)
 
 @app.route('/')
 def index():
