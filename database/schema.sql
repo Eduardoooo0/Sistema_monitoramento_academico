@@ -1,3 +1,4 @@
+drop database if exists db_academico;
 create database db_academico;
 use db_academico;
 
@@ -13,11 +14,10 @@ create table tb_cursos(
 
 create table tb_alunos(
 	alu_id int auto_increment not null primary key,
-    alu_matricula int not null unique,
+    alu_matricula varchar(20) not null unique,
     alu_nome varchar(100) not null,
     alu_email varchar(100) unique,
     alu_data_nascimento date,
-    alu_turma varchar(100) not null,
     alu_cur_id int,
     foreign key (alu_cur_id) references tb_cursos(cur_id)
 );
@@ -35,6 +35,7 @@ create table tb_disciplinas(
 create table tb_notas(
 	not_id int auto_increment not null primary key,
     not_nota float not null,
+    not_bimestre enum('1','2','3','4') default '1',
     not_alu_id int,
     foreign key (not_alu_id) references tb_alunos(alu_id)
 );
@@ -58,3 +59,10 @@ create table tb_frequencia(
 
 );
 
+insert into tb_cursos(cur_nome) values 
+('Infoweb'),
+('Têxtil'),
+('Eletrotécnica'),
+('Vestuário'),
+('Design de moda'),
+('Física');
