@@ -7,10 +7,24 @@ create table tb_professores(
 	pro_nome varchar(100) not null
 );
 
+insert into tb_professores(pro_nome) values 
+('Romerito'),
+('Hugo'),
+('Iuri');
+
 create table tb_cursos(
 	cur_id int auto_increment not null primary key,
     cur_nome varchar(100) not null
 );
+
+
+insert into tb_cursos(cur_nome) values 
+('Infoweb'),
+('Têxtil'),
+('Eletrotécnica'),
+('Vestuário'),
+('Design de moda'),
+('Física');
 
 create table tb_alunos(
 	alu_id int auto_increment not null primary key,
@@ -24,6 +38,7 @@ create table tb_alunos(
 
 create table tb_disciplinas(
 	dis_id int auto_increment not null primary key,
+    dis_codigo varchar(100) not null unique,
     dis_nome varchar(100) not null,
     dis_carga_horaria int not null,
     dis_pro_id int,
@@ -31,6 +46,7 @@ create table tb_disciplinas(
     foreign key (dis_pro_id) references tb_professores(pro_id),
     foreign key (dis_cur_id) references tb_cursos(cur_id)
 );
+
 
 create table tb_notas(
 	not_id int auto_increment not null primary key,
@@ -59,10 +75,3 @@ create table tb_frequencia(
 
 );
 
-insert into tb_cursos(cur_nome) values 
-('Infoweb'),
-('Têxtil'),
-('Eletrotécnica'),
-('Vestuário'),
-('Design de moda'),
-('Física');

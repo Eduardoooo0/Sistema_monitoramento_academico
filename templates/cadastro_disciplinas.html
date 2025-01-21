@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar disciplinas</title>
+</head>
+<body>
+    <h1>Cadastro de disciplinas</h1>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    <form action="{{url_for('cadastro_disciplinas')}}" method="post">
+        <label>Código:</label>
+        <input type="text" name="codigo" placeholder="Digite o código da disciplina">
+        <label>Nome:</label>
+        <input type="text" name="nome" placeholder="Digite o nome da disciplina">
+        <label>Curso:</label>
+        <select name="curso" required>
+            <option value="" selected disabled>Selecione o curso da disciplina</option>
+            {% for curso in cursos %}
+                <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
+            {% endfor %}
+        </select>
+        <label>Professor:</label>
+        <select name="professor" required>
+            <option value="" selected disabled>Selecione o professor da disciplina</option>
+            {% for prof in professores %}
+                <option value="{{prof.pro_id}}">{{prof.pro_nome}}</option>
+            {% endfor %}
+        </select>
+        <label>Carga horária:</label>
+        <input type="number" name="carga" id="" placeholder="Digite a carga horária">
+        <input type="submit" value="Enviar">
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red;">{{message}}</p>
+            {% endfor %}
+        {% endif %}
+
+    </form>
+    {% endwith %}
+</body>
+</html>

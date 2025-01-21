@@ -49,3 +49,29 @@ def cadastro_alunos():
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
     return render_template('cadastro_alunos.html', cursos=cursos)
+
+
+@app.route('/cadastro_disciplinas', methods=['POST','GET'])
+def cadastro_disciplinas():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        cursor.execute("SELECT dis_codigo FROM tb_disciplinas")
+        cod = cursor.fetchall()
+        cod = [row['dis_codigo'] for row in cod]
+        codigo = request.form['codigo']
+        nome = request.form['nome']
+        curso = request.form.get('curso')
+        professor = request.form.get('professor')
+        carga_horaria = request.form['carga']
+        if codigo in cod:
+            flash('Código já cadastrado.')
+            return redirect(url_for('cadastro_disciplinas'))
+        cursor.execute("INSERT INTO tb_disciplinas(dis_codigo,dis_nome,dis_carga_horaria,dis_cur_id, dis_pro_id) VALUES (%s,%s,%s,%s,%s)", (codigo,nome,carga_horaria,curso,professor))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('index'))
+    cursor.execute('SELECT * FROM tb_professores')
+    professores = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_cursos')
+    cursos = cursor.fetchall()
+    return render_template('cadastro_disciplinas.html', cursos=cursos, professores=professores)
