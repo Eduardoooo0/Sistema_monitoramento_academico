@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar atividade acadêmica</title>
+</head>
+<body>
+    <h1>Cadastro de atividades acadêmicas</h1>
+    <hr>
+    <form action="{{url_for('cadastro_atividades')}}" method="post">
+        <label>Titulo:</label>
+        <input type="text" name="titulo" placeholder="Digite um titulo para a atividade">
+        <label>Tipo:</label>
+        <select name="tipo" required>
+            <option value="" selected disabled>Selecione o tipo de atividade acadêmica</option>
+            <option value="Prova">Prova</option>
+            <option value="Trabalho">Trabalho</option>
+            <option value="Projeto">Projeto</option>
+        </select>
+        <label>Descrição:</label>
+        <input type="text" name="descricao" placeholder="Descreva a atividade">
+        <label>Peso:</label>
+        <input type="number" name="peso" placeholder="Peso da atividade" required>
+        <label>Data de entrega:</label>
+        <input type="date" name="data" required>
+        <label>Disciplina:</label>
+        <select name="disciplina" id="" required>
+            <option value="" disabled selected>Selecione de qual disciplina é a atividade</option>
+            {% for disc in disciplinas %}
+                <option value="{{disc.dis_id}}">{{disc.dis_nome}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>

@@ -18,6 +18,29 @@ mysql = MySQL(app)
 def index():
     return render_template('index.html')
 
+@app.route('/alunos')
+def alunos():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id')
+    alunos = cursor.fetchall()
+    
+    return render_template('alunos.html',alunos=alunos)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/cadastro_alunos', methods=['GET','POST'])
 def cadastro_alunos():
@@ -45,7 +68,7 @@ def cadastro_alunos():
         cursor.execute("INSERT INTO tb_alunos(alu_nome,alu_matricula,alu_email,alu_data_nascimento, alu_cur_id) VALUES (%s,%s,%s,%s,%s)", (nome,matricula,email,data_nascimento,curso))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('alunos'))
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
     return render_template('cadastro_alunos.html', cursos=cursos)
@@ -75,3 +98,21 @@ def cadastro_disciplinas():
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
     return render_template('cadastro_disciplinas.html', cursos=cursos, professores=professores)
+
+@app.route('/cadastro_atividades', methods=['POST','GET'])
+def cadastro_atividades():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        tipo = request.form.get('tipo')
+        descricao = request.form['descricao']
+        peso = request.form['peso']
+        data_entrega = request.form['data']
+        disciplina = request.form.get('disciplina')
+        cursor.execute("INSERT INTO tb_atividades(atv_titulo,atv_tipo,atv_descricao,atv_peso,atv_data,atv_dis_id) VALUES (%s,%s,%s,%s,%s,%s)", (titulo,tipo,descricao,peso,data_entrega,disciplina))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('index'))
+    cursor.execute('SELECT * FROM tb_disciplinas')
+    disciplinas = cursor.fetchall()
+    return render_template('cadastro_atv.html', disciplinas=disciplinas)

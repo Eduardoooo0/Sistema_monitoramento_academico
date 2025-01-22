@@ -11,9 +11,9 @@
     {% with messages = get_flashed_messages() %}
     <form action="{{url_for('cadastro_disciplinas')}}" method="post">
         <label>Código:</label>
-        <input type="text" name="codigo" placeholder="Digite o código da disciplina">
+        <input type="text" name="codigo" placeholder="Digite o código da disciplina" required>
         <label>Nome:</label>
-        <input type="text" name="nome" placeholder="Digite o nome da disciplina">
+        <input type="text" name="nome" placeholder="Digite o nome da disciplina" required>
         <label>Curso:</label>
         <select name="curso" required>
             <option value="" selected disabled>Selecione o curso da disciplina</option>
@@ -29,7 +29,7 @@
             {% endfor %}
         </select>
         <label>Carga horária:</label>
-        <input type="number" name="carga" id="" placeholder="Digite a carga horária">
+        <input type="number" name="carga" id="" placeholder="Digite a carga horária" required>
         <input type="submit" value="Enviar">
         {% if messages %}
             {% for message in messages %}

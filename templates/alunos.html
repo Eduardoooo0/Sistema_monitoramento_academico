@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos</title>
+</head>
+<body>
+    <h1>Página de alunos</h1>
+    <hr>
+    <a href="{{url_for('cadastro_alunos')}}">Cadastrar aluno</a>
+    {% for alu in alunos %}
+        <div style="border: 1px solid black; width: 25%; padding: 10px;">
+            <h2>{{alu.alu_nome}}</h2>
+            <label>Matricula: {{alu.alu_matricula}}</label><br>
+            <label>Email: {{alu.alu_email}}</label><br>
+            <label>Data de nascimento: {{alu.alu_data_nascimento}}</label><br>
+            <label>Curso: {{alu.cur_nome}}</label><br>
+            <a href="">Editar</a>|
+            <a href="">Deletar</a>
+        </div>
+        <br>
+    {% endfor %}
+</body>
+</html>
