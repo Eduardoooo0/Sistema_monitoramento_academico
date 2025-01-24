@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar entregas</title>
+</head>
+<body>
+    <h1>Cadastro de entrega de atividades</h1>
+    <hr>
+    <form action="{{url_for('cadastro_entregas')}}" method="post">
+        <label>Atividade:</label>
+        <select name="atividade" id="">
+            <option value="" selected disabled>Selecione a atividade</option>
+            {% for ate in dados%}
+            <option value="{{ate.atv_id}}">{{ate.atv_titulo}}</option>
+            {% endfor %}
+        </select>
+        <label>Aluno:</label>
+        <select name="aluno" id="">
+            <option value="" selected disabled>Selecione o aluno</option>
+            {% for alu in alunos %}
+            <option value="{{alu.alu_id}}">{{alu.alu_nome}}</option>
+            {% endfor %}
+        </select>
+        <label>Data de entrega:</label>
+        <input type="date" name="data" id="">
+        <label>Nota obtida:</label>
+        <input type="number" name="nota" id="" placeholder="Nota obtida">
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>

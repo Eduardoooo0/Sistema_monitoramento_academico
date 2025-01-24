@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividades</title>
+</head>
+<body>
+    <h1>Página de atividades</h1>
+    <hr>
+    <a href="{{url_for('cadastro_atividades')}}">Cadastrar atividade</a>|
+    <a href="{{url_for('cadastro_entregas')}}">Cadastrar entrega de atividade</a>
+    {% for atv in atividades %}
+        <div style="border: 1px solid black; width: 25%; padding: 10px;">
+            <h2>{{atv.atv_titulo}}</h2>
+            <label>Tipo: {{atv.atv_tipo}}</label><br>
+            <label>Peso: {{atv.atv_peso}}</label><br>
+            <label>Bimestre: {{atv.atv_bimestre}}</label>
+            <label>Prazo de entrega: {{atv.atv_data}}</label><br>
+            <label>Disciplina: {{atv.dis_nome}}</label><br>
+            <label>Professor: {{atv.pro_nome}}</label><br>
+            <label>Curso: {{atv.cur_nome}}</label><br>
+            <label>Descrição: {{atv.atv_descricao}}</label>
+            <a href="">Editar</a>|
+            <a href="">Deletar</a>
+        </div>
+        <br>
+    {% endfor %}
+</body>
+</html>

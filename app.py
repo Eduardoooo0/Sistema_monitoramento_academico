@@ -26,21 +26,21 @@ def alunos():
     
     return render_template('alunos.html',alunos=alunos)
 
+@app.route('/disciplinas')
+def disciplinas():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_disciplinas JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_professores ON dis_pro_id = pro_id')
+    disciplinas = cursor.fetchall()
+    
+    return render_template('disciplinas.html',disciplinas=disciplinas)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@app.route('/atividades')
+def atividades():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_atividades JOIN tb_disciplinas ON atv_dis_id = dis_id JOIN tb_cursos ON cur_id = dis_cur_id JOIN tb_professores ON dis_pro_id = pro_id')
+    atividades = cursor.fetchall()
+    
+    return render_template('atividades.html',atividades=atividades)
 
 @app.route('/cadastro_alunos', methods=['GET','POST'])
 def cadastro_alunos():
@@ -92,7 +92,7 @@ def cadastro_disciplinas():
         cursor.execute("INSERT INTO tb_disciplinas(dis_codigo,dis_nome,dis_carga_horaria,dis_cur_id, dis_pro_id) VALUES (%s,%s,%s,%s,%s)", (codigo,nome,carga_horaria,curso,professor))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('disciplinas'))
     cursor.execute('SELECT * FROM tb_professores')
     professores = cursor.fetchall()
     cursor.execute('SELECT * FROM tb_cursos')
@@ -106,13 +106,32 @@ def cadastro_atividades():
         titulo = request.form['titulo']
         tipo = request.form.get('tipo')
         descricao = request.form['descricao']
+        bimestre = request.form.get('bimestre')
         peso = request.form['peso']
         data_entrega = request.form['data']
         disciplina = request.form.get('disciplina')
-        cursor.execute("INSERT INTO tb_atividades(atv_titulo,atv_tipo,atv_descricao,atv_peso,atv_data,atv_dis_id) VALUES (%s,%s,%s,%s,%s,%s)", (titulo,tipo,descricao,peso,data_entrega,disciplina))
+        cursor.execute("INSERT INTO tb_atividades(atv_titulo,atv_tipo,atv_descricao,atv_bimestre,atv_peso,atv_data,atv_dis_id) VALUES (%s,%s,%s,%s,%s,%s,%s)", (titulo,tipo,descricao,bimestre,peso,data_entrega,disciplina))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('atividades'))
     cursor.execute('SELECT * FROM tb_disciplinas')
     disciplinas = cursor.fetchall()
     return render_template('cadastro_atv.html', disciplinas=disciplinas)
+
+@app.route('/cadastro_entregas', methods=['POST','GET'])
+def cadastro_entregas():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        atividade = request.form.get('atividade')
+        aluno = request.form.get('aluno')
+        data = request.form['data']
+        nota = request.form['nota']
+        cursor.execute('INSERT INTO tb_atividades_entrega(ate_data,ate_nota,ate_atv_id,ate_alu_id) VALUES (%s,%s,%s,%s)',(data,nota,atividade,aluno))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('atividades'))
+    cursor.execute('SELECT * FROM tb_atividades JOIN tb_disciplinas ON atv_dis_id = dis_id JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_alunos ON cur_id = alu_cur_id')
+    dados = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_alunos')
+    alunos = cursor.fetchall()
+    return render_template('cadastro_entregas.html', dados=dados,alunos=alunos)

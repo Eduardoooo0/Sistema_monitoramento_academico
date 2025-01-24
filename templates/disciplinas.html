@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciplinas</title>
+</head>
+<body>
+    <h1>Página de disciplinas</h1>
+    <hr>
+    <a href="{{url_for('cadastro_disciplinas')}}">Cadastrar disciplina</a>
+    {% for dis in disciplinas %}
+        <div style="border: 1px solid black; width: 25%; padding: 10px;">
+            <h2>{{dis.dis_nome}}</h2>
+            <label>Código: {{dis.dis_codigo}}</label><br>
+            <label>Carga horária: {{dis.dis_carga_horaria}}</label><br>
+            <label>Professor: {{dis.pro_nome}}</label><br>
+            <label>Curso: {{dis.cur_nome}}</label><br>
+            <a href="">Editar</a>|
+            <a href="">Deletar</a>
+        </div>
+        <br>
+    {% endfor %}
+</body>
+</html>
