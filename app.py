@@ -74,6 +74,41 @@ def cadastro_alunos():
     return render_template('cadastro_alunos.html', cursos=cursos)
 
 
+@app.route('/editar_alunos/<int:id>', methods=['POST','GET'])
+def editar_alunos(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'GET':
+        alu_id = id
+        cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id WHERE alu_id = (%s)', (alu_id,))
+        aluno = cursor.fetchone()
+        cursor.execute('SELECT * FROM tb_cursos')
+        cursos = cursor.fetchall()
+        return render_template('editar_alunos.html', aluno = aluno, cursos=cursos)
+    
+    else:
+        nome = request.form['nome']
+        matricula = request.form['matricula']
+        email = request.form['email']
+        data_nascimento = request.form['data']
+        curso = request.form.get('curso')
+
+        cursor.execute('UPDATE tb_alunos SET alu_nome = (%s), alu_matricula = (%s), alu_email = (%s), alu_data_nascimento = (%s), alu_cur_id = (%s) WHERE alu_id = (%s)',
+                       (nome, matricula, email, data_nascimento, curso, id))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('alunos'))
+
+
+@app.route('/excluir_alunos/<int:id>', methods=['POST','GET'])
+def excluir_alunos(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM tb_alunos WHERE alu_id = (%s)", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('alunos'))
+
+
+
 @app.route('/cadastro_disciplinas', methods=['POST','GET'])
 def cadastro_disciplinas():
     cursor = mysql.connection.cursor()
