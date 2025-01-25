@@ -16,16 +16,16 @@ create table tb_cursos(
 	cur_id int auto_increment not null primary key,
     cur_nome varchar(100) not null
 );
+ 
 
-
-insert into tb_cursos(cur_nome) values 
-('Infoweb'),
-('Têxtil'),
-('Eletrotécnica'),
-('Vestuário'),
-('Design de moda'),
-('Física');
-
+ insert into tb_cursos(cur_nome) values 
+ ('Infoweb'),
+ ('Têxtil'),
+ ('Eletrotécnica'),
+ ('Vestuário'),
+ ('Design de moda'),
+ ('Física');
+ 
 create table tb_alunos(
 	alu_id int auto_increment not null primary key,
     alu_matricula varchar(20) not null unique,
@@ -48,30 +48,48 @@ create table tb_disciplinas(
 );
 
 
+create table tb_atividades(
+	atv_id int auto_increment not null primary key,
+    atv_titulo varchar(100) not null,
+    atv_tipo enum('Projeto','Trabalho','Prova') default 'Trabalho',
+    atv_descricao text,
+    atv_bimestre enum('1','2','3','4') default '1',
+    atv_peso float not null,
+    atv_data date not null,
+    atv_dis_id int,
+    foreign key (atv_dis_id) references tb_disciplinas(dis_id)
+);
+
+
+create table tb_atividades_entrega(
+	ate_id int auto_increment not null primary key,
+    ate_data date not null,
+    ate_nota float not null,
+    ate_atv_id int,
+    ate_alu_id int,
+    foreign key (ate_atv_id) references tb_atividades(atv_id),
+	foreign key (ate_alu_id) references tb_alunos(alu_id)
+);
+
 create table tb_notas(
 	not_id int auto_increment not null primary key,
     not_nota float not null,
-    not_bimestre enum('1','2','3','4') default '1',
-    not_alu_id int,
-    foreign key (not_alu_id) references tb_alunos(alu_id)
+    not_atv_id int,
+    not_ate_id int,
+    foreign key (not_atv_id) references tb_atividades(atv_id),
+    foreign key (not_ate_id) references tb_atividades_entrega(ate_id)
 );
 
-create table tb_atividades(
-	atv_id int auto_increment not null primary key,
-    atv_tipo enum('Projeto','Trabalho','Prova') default 'Trabalho',
-    atv_descricao text,
-    atv_peso float not null,
-    atv_alu_id int,
-    atv_not_id int,
-    foreign key (atv_alu_id) references tb_alunos(alu_id),
-    foreign key (atv_not_id) references tb_notas(not_id)
-);
+
 
 create table tb_frequencia(
 	frq_id int auto_increment not null primary key,
-    frq_falta int default 0,
+    frq_data date not null,
+    frq_presenca enum('Presente','Falta') default 'Presente',
     frq_alu_id int,
-    foreign key (frq_alu_id) references tb_alunos(alu_id)
-
+    frq_dis_id int,
+    frq_cur_id int,
+    foreign key (frq_alu_id) references tb_alunos(alu_id),
+    foreign key (frq_dis_id) references tb_disciplinas(dis_id),
+    foreign key (frq_cur_id) references tb_cursos(cur_id)
 );
-

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequência</title>
+</head>
+<body>
+    <h1>Frequência</h1>
+    <hr>
+    <form action="{{url_for('frequencia')}}" method="post">
+        <input type="hidden" name="form_type" value="form1">
+        <label>Curso:</label>
+        <select name="curso" onchange="atualizarDisciplinas()">
+            <option value="" selected disabled>Selecione o curso</option>
+            {% for curso in cursos %}
+                <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
+            {% endfor %}
+        </select>
+        <select name="disciplina">
+            <option value="" selected disabled>Selecione a disciplina</option>
+            {% for disc in disciplinas %}
+                <option value="{{disc.dis_id}}">{{disc.dis_nome}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Enviar">
+    </form>
+    {% if dados %}
+        <form action="{{ url_for('frequencia') }}" method="post">
+            <input type="hidden" name="form_type" value="form2">
+            <label>Data:</label>
+            <input type="date" name="data" id="data" required>
+            {% for alu in dados %}
+                <div style="border: 1px solid black; width: 25%; display: flex; flex-direction: row; justify-content: space-around;">
+                    <label for="aluno">{{ alu.alu_nome }}</label>
+                    <select name="presenca_{{ alu.alu_id }}">
+                        <option value="Presente">Presente</option>
+                        <option value="Falta">Falta</option>
+                    </select>
+                </div>
+            {% endfor %}
+            
+            <input type="submit" value="Enviar">
+        </form>
+    {% endif %}
+
+    <script>
+        const today = new Date().toISOString().split('T')[0]; // Data atual no formato YYYY-MM-DD
+        document.getElementById('data').setAttribute('min', '2025-01-01'); // Define a data mínima como hoje
+        document.getElementById('data').setAttribute('max', today); // Define a data máxima
+    </script>
+</body>
+</html>

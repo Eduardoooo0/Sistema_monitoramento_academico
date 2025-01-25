@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session,make_response
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session,make_response
 from flask_mysqldb import MySQL
 import os
 app = Flask(__name__)
@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'senha'
 
 # Configurações do MySQL
-app.config['MYSQL_HOST'] = 'localhost' 
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = os.getenv('SENHA')
 app.config['MYSQL_DB'] = 'db_academico'
@@ -23,7 +23,7 @@ def alunos():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id')
     alunos = cursor.fetchall()
-    
+
     return render_template('alunos.html',alunos=alunos)
 
 @app.route('/disciplinas')
@@ -31,7 +31,7 @@ def disciplinas():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM tb_disciplinas JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_professores ON dis_pro_id = pro_id')
     disciplinas = cursor.fetchall()
-    
+
     return render_template('disciplinas.html',disciplinas=disciplinas)
 
 @app.route('/atividades')
@@ -39,7 +39,7 @@ def atividades():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM tb_atividades JOIN tb_disciplinas ON atv_dis_id = dis_id JOIN tb_cursos ON cur_id = dis_cur_id JOIN tb_professores ON dis_pro_id = pro_id')
     atividades = cursor.fetchall()
-    
+
     return render_template('atividades.html',atividades=atividades)
 
 @app.route('/cadastro_alunos', methods=['GET','POST'])
@@ -84,7 +84,7 @@ def editar_alunos(id):
         cursor.execute('SELECT * FROM tb_cursos')
         cursos = cursor.fetchall()
         return render_template('editar_alunos.html', aluno = aluno, cursos=cursos)
-    
+
     else:
         cursor.execute("SELECT alu_matricula,alu_email FROM tb_alunos")
         mat_ema = cursor.fetchall()
@@ -248,3 +248,38 @@ def cadastro_entregas():
     cursor.execute('SELECT * FROM tb_alunos')
     alunos = cursor.fetchall()
     return render_template('cadastro_entregas.html', dados=dados,alunos=alunos)
+
+
+@app.route('/frequencia', methods=['POST','GET'])
+def frequencia():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_disciplinas')
+    disciplinas = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_cursos')
+    cursos = cursor.fetchall()
+    if request.method == 'POST':
+        forms = request.form.get('form_type')
+        curso = request.form.get('curso')
+        disciplina = request.form.get('disciplina')
+        cursor.execute('SELECT * FROM tb_disciplinas JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_alunos ON alu_cur_id = cur_id WHERE dis_cur_id = %s AND dis_id = %s', (curso,disciplina))
+        dados = cursor.fetchall()
+        if forms == 'form1':
+            response = make_response(render_template('frequencia.html', dados=dados, disciplinas=disciplinas,cursos=cursos))
+            response.set_cookie('disciplina_id', disciplina)
+            response.set_cookie('curso_id', curso)
+            return response
+        elif forms == 'form2':
+            disc = request.cookies.get('disciplina_id')
+            curso = request.cookies.get('curso_id')
+            cursor.execute('SELECT alu_id AS quant FROM tb_disciplinas JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_alunos ON alu_cur_id = cur_id WHERE dis_id = %s AND dis_cur_id = %s', (disc,curso))
+            quant = cursor.fetchall()
+            data = request.form.get('data')
+            for alu in quant:
+                alu_id = alu['quant']
+                presenca = request.form.get(f'presenca_{alu_id}')
+                cursor.execute('INSERT INTO tb_frequencia(frq_data,frq_presenca,frq_alu_id,frq_dis_id,frq_cur_id) VALUES (%s,%s,%s,%s,%s)', (data,presenca,alu_id,disc,curso))
+                mysql.connection.commit()
+            cursor.close()
+            return redirect(url_for('frequencia'))
+    return render_template('frequencia.html',disciplinas=disciplinas,cursos=cursos )
+
