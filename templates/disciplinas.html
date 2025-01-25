@@ -16,8 +16,8 @@
             <label>Carga horária: {{dis.dis_carga_horaria}}</label><br>
             <label>Professor: {{dis.pro_nome}}</label><br>
             <label>Curso: {{dis.cur_nome}}</label><br>
-            <a href="">Editar</a>|
-            <a href="">Deletar</a>
+            <a href="{{ url_for('editar_disciplinas', id=dis.dis_id) }}">Editar</a>
+            <a href="{{ url_for('excluir_disciplinas', id=dis.dis_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta disciplina?');">Deletar</a>
         </div>
         <br>
     {% endfor %}
