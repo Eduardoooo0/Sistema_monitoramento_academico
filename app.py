@@ -86,18 +86,44 @@ def editar_alunos(id):
         return render_template('editar_alunos.html', aluno = aluno, cursos=cursos)
     
     else:
+        cursor.execute("SELECT alu_matricula,alu_email FROM tb_alunos")
+        mat_ema = cursor.fetchall()
+        matriculas = [row['alu_matricula'] for row in mat_ema]
+        emails = [row['alu_email'] for row in mat_ema]
+        cursor.execute("SELECT * FROM tb_alunos WHERE alu_id=(%s)", (id,))
+        aluno = cursor.fetchone()
+        email_atual = aluno['alu_email']
+        matricula_atual = aluno['alu_matricula']
+
         nome = request.form['nome']
         matricula = request.form['matricula']
         email = request.form['email']
         data_nascimento = request.form['data']
         curso = request.form.get('curso')
 
+        # se o email/matricula já estiverem cadastrados
+        if email in emails and matricula in matriculas:
+            if email != email_atual and matricula != matricula_atual:
+                flash('Email e matrícula já cadastrados')
+                return redirect(url_for('editar_alunos', id=id))
+            elif email != email_atual:
+                flash('Email já cadastrado')
+                return redirect(url_for('editar_alunos', id=id))
+            elif matricula != matricula_atual:
+                flash('Matrícula já cadastrada')
+                return redirect(url_for('editar_alunos', id=id))
+        elif email in emails and email != email_atual:
+            flash('Email já cadastrado')
+            return redirect(url_for('editar_alunos', id=id))
+        elif matricula in matriculas and matricula != matricula_atual:
+            flash('Matrícula já cadastrada')
+            return redirect(url_for('editar_alunos', id=id))
+
         cursor.execute('UPDATE tb_alunos SET alu_nome = (%s), alu_matricula = (%s), alu_email = (%s), alu_data_nascimento = (%s), alu_cur_id = (%s) WHERE alu_id = (%s)',
                        (nome, matricula, email, data_nascimento, curso, id))
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('alunos'))
-
 
 @app.route('/excluir_alunos/<int:id>', methods=['POST','GET'])
 def excluir_alunos(id):
@@ -106,7 +132,6 @@ def excluir_alunos(id):
     mysql.connection.commit()
     cursor.close()
     return redirect(url_for('alunos'))
-
 
 
 @app.route('/cadastro_disciplinas', methods=['POST','GET'])
@@ -133,6 +158,59 @@ def cadastro_disciplinas():
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
     return render_template('cadastro_disciplinas.html', cursos=cursos, professores=professores)
+
+
+@app.route('/editar_disciplinas/<int:id>', methods=['POST','GET'])
+def editar_disciplinas(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'GET':
+        cursor.execute('SELECT * FROM tb_disciplinas JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_professores ON dis_pro_id = pro_id WHERE dis_id = (%s)', (id,))
+        disciplina = cursor.fetchone()
+        cursor.execute('SELECT * FROM tb_cursos')
+        cursos = cursor.fetchall()
+        cursor.execute('SELECT * FROM tb_professores')
+        professores = cursor.fetchall()
+        return render_template('editar_disciplinas.html', disciplina = disciplina, cursos=cursos, professores=professores)
+    
+    else:
+        cursor.execute("SELECT dis_codigo, dis_nome FROM tb_disciplinas")
+        disc = cursor.fetchall()
+        cod = [row['dis_codigo'] for row in disc]
+        nomes = [row['dis_nome'] for row in disc]
+        cursor.execute("SELECT * FROM tb_disciplinas WHERE dis_id = (%s)", (id,))
+        disciplina = cursor.fetchone()
+        cod_atual = disciplina['dis_codigo']
+        nome_atual = disciplina['dis_nome']
+
+        codigo = request.form['codigo']
+        nome = request.form['nome']
+        curso = request.form.get('curso')
+        professor = request.form.get('professor')
+        carga_horaria = request.form['carga']
+
+        # se o códico já estiver cadastrado
+        if codigo != cod_atual and codigo in cod:
+            flash('Código já cadastrado.')
+            return redirect(url_for('editar_disciplinas', id=id))
+        elif nome != nome_atual and nome in nomes:
+            flash('Nome já cadastrado.')
+            return redirect(url_for('editar_disciplinas', id=id))
+    
+        cursor.execute("UPDATE tb_disciplinas SET dis_codigo = (%s), dis_nome = (%s), dis_carga_horaria = (%s), dis_cur_id = (%s), dis_pro_id = (%s) WHERE dis_id = (%s)", 
+                       (codigo,nome,carga_horaria,curso,professor,id))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('disciplinas'))
+
+
+@app.route('/excluir_disciplinas/<int:id>', methods=['POST','GET'])
+def excluir_disciplinas(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM tb_disciplinas WHERE dis_id = (%s)", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('disciplinas'))
+
 
 @app.route('/cadastro_atividades', methods=['POST','GET'])
 def cadastro_atividades():
