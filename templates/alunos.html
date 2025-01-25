@@ -16,8 +16,10 @@
             <label>Email: {{alu.alu_email}}</label><br>
             <label>Data de nascimento: {{alu.alu_data_nascimento}}</label><br>
             <label>Curso: {{alu.cur_nome}}</label><br>
-            <a href="">Editar</a>|
-            <a href="">Deletar</a>
+            
+            <a href="{{ url_for('editar_alunos', id=alu.alu_id) }}">Editar</a>
+            <a href="{{ url_for('excluir_alunos', id=alu.alu_id) }}" onclick="return confirm('Tem certeza que deseja deletar este aluno?');">Deletar</a>
+        
         </div>
         <br>
     {% endfor %}
