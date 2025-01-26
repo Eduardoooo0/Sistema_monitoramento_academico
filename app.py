@@ -340,6 +340,48 @@ def excluir_atividades(id):
     mysql.connection.commit()
     cursor.close()
     return redirect(url_for('atividades'))
+
+
+@app.route('/filtrar_atividades', methods=['POST','GET'])
+def filtrar_atividades():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("SELECT atv_id FROM tb_atividades")
+    ids = cursor.fetchall()
+    ids = [row['atv_id'] for row in ids]
+    ids_atv = ','.join(map(str, ids))
+
+    col_titulo = request.form.get('titulo')
+    col_tipo = request.form.get('tipo')
+    col_descricao = request.form.get('descricao')
+    col_bimestre = request.form.get('bimestre')
+    col_peso = request.form.get('peso')
+    col_data_entrega = request.form.get('data')
+    col_disciplina = request.form.get('disciplina')
+
+    text = f"SELECT atv_id, atv_titulo, atv_tipo, atv_descricao, atv_bimestre, atv_peso, atv_data, atv_dis_id, dis_nome, cur_nome, pro_nome FROM tb_atividades JOIN tb_disciplinas on atv_dis_id = dis_id JOIN tb_cursos ON cur_id = dis_cur_id JOIN tb_professores ON dis_pro_id = pro_id WHERE atv_id in ({ids_atv})"
+
+    if col_titulo:
+        text += f" and atv_titulo = '{col_titulo}'"
+    if col_tipo :
+        text += f" and atv_tipo = '{col_tipo}'"
+    if col_descricao :
+        text += f" and atv_descricao = '{col_descricao}'"
+    if col_bimestre :
+        text += f" and atv_bimestre = '{col_bimestre}'"
+    if col_peso:
+        text += f" and atv_peso = '{col_peso}'"
+    if col_data_entrega:
+        text += f" and atv_data = '{col_data_entrega}'"
+    if col_disciplina:
+        text += f" and atv_dis_id = '{col_disciplina}'"
+    
+    cursor.execute(text)
+    atividades = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_disciplinas')
+    disciplinas = cursor.fetchall()
+    return render_template('atividades.html', atividades=atividades, disciplinas=disciplinas)
+
     
 
 @app.route('/cadastro_entregas', methods=['POST','GET'])
