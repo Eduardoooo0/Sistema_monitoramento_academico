@@ -1,0 +1,194 @@
+* {
+    border: 0;              /* Remove a borda padrão de todos os elementos */
+    margin: 0;              /* Remove a margem padrão de todos os elementos */
+    box-sizing: border-box; /* Inclui padding e bordas na largura e altura dos elementos */
+}
+
+body {
+    display: flex;              /* Define o layout do corpo como flexbox */
+    justify-content: center;    /* Centraliza o conteúdo horizontalmente */
+    align-items: center;        /* Centraliza o conteúdo verticalmente */
+    height: 100vh;              /* Define a altura do corpo como 100% da altura da viewport */
+    width: 100%;                /* Define a largura do corpo como 100% da largura da viewport */
+    background-color: pink;
+}
+
+.container {
+    display: flex;              /* Define o layout do contêiner como flexbox */
+    position: fixed;            /* Fixa o contêiner na posição da tela */
+    flex-direction: row;     /* Organiza os itens do contêiner em uma coluna */
+    width: 100%;                /* Define a largura do contêiner como 100% da largura da viewport */
+    height: 100%;               /* Define a altura do contêiner como 100% da altura da viewport */
+}
+
+aside{
+    display: flex;
+    background-color: white;
+    width: 20vw;
+    height: 100%;
+    flex-direction: column;
+    padding: 2%;
+    border: 1px solid gray;
+}
+
+.botoes {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20%;
+}
+aside a {
+    background-color: #ffa837;
+    color: black;
+    padding: 3%;
+    margin: 4%;
+    height: 5vh;
+    text-align: center;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+.logo{
+    width: 60%;
+    height: 8%;
+    background-image: url(../static/imgs/logo.png);
+    background-size: cover;
+    margin-left: 10%;
+}
+
+
+section{
+    display: flex;
+    flex-direction: column;
+    /* background-color: #ffa837; */
+    background-color: white;
+    width: 80vw;
+    height: 100vh;
+    padding: 5%;
+    align-items: center;
+    overflow: auto;
+}
+
+.box_atividades{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100vh;
+    padding: 5%;
+}
+
+.alunos {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffa837;
+    height: 30vh;
+    width: 20vw;
+    margin: 3%;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    align-items: center;
+}
+
+#cadastrar {
+    width: 30%;
+    height: 30%;
+    margin-top: 15%;
+    border-radius: 100%;
+}
+
+.titulo{
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 20%;
+    text-align: center;
+    padding: 3%;
+    text-decoration: none;
+}
+
+.titulo p {
+    color: white;
+}
+
+.cad_disciplinas {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffa837;
+    height: 30vh;
+    width: 20vw;
+    margin: 3%;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    align-items: center;
+}
+.cad_atividades {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffa837;
+    height: 30vh;
+    width: 20vw;
+    margin: 3%;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    align-items: center;
+}
+
+.frequencia {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffa837;
+    height: 30vh;
+    width: 20vw;
+    margin: 3%;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    align-items: center;
+}
+
+section h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    margin-bottom: 4%;
+}
+
+#form_cadastro {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: rgb(209, 207, 207);
+    width: 60vw;
+    height: 50vh;
+    padding: 2%;
+    border-radius: 2%;
+    font-size: 17px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#form_cadastro label {
+    margin-left: 1%;
+}
+
+#form_cadastro input{
+    height: 32px;
+    padding: 1%;
+    margin: 1%;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+
+#form_cadastro select{
+    height: 35px;
+    padding: 1%;
+    margin: 1%;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+
+#form_cadastro #enviar {
+    height: 32px;
+    width: 25%;
+    padding: 1%;
+    margin-left: 15%;
+    margin-top: 3%;
+    border-radius: 10px;
+    color: white;
+    background-color: black;
+    cursor: pointer;
+}

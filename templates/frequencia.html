@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frequência</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+{% endblock %}
+
+{% block section %}
     <h1>Frequência</h1>
     <hr>
-    <form action="{{url_for('frequencia')}}" method="post">
+    <form id="form_cadastro" action="{{url_for('frequencia')}}" method="post">
         <input type="hidden" name="form_type" value="form1">
         <label>Curso:</label>
         <select name="curso" onchange="atualizarDisciplinas()">
@@ -23,10 +30,10 @@
                 <option value="{{disc.dis_id}}">{{disc.dis_nome}}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar">
     </form>
     {% if dados %}
-        <form action="{{ url_for('frequencia') }}" method="post">
+        <form id="form_cadastro" action="{{ url_for('frequencia') }}" method="post">
             <input type="hidden" name="form_type" value="form2">
             <label>Data:</label>
             <input type="date" name="data" id="data" required>
@@ -40,7 +47,7 @@
                 </div>
             {% endfor %}
             
-            <input type="submit" value="Enviar">
+            <input id="enviar" type="submit" value="Enviar">
         </form>
     {% endif %}
 
@@ -49,5 +56,4 @@
         document.getElementById('data').setAttribute('min', '2025-01-01'); // Define a data mínima como hoje
         document.getElementById('data').setAttribute('max', today); // Define a data máxima
     </script>
-</body>
-</html>
+{% endblock %}

@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar alunos</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+{% endblock %}
+
+{% block section %}
     <h1>Cadastro de alunos</h1>
     <hr>
     {% with messages = get_flashed_messages() %}
-    <form action="{{url_for('cadastro_alunos')}}" method="post">
+    <form id="form_cadastro" action="{{url_for('cadastro_alunos')}}" method="post">
         <label>Nome:</label>
         <input type="text" name="nome" placeholder="Digite o nome do aluno(a)" required>
         <label>Matricula:</label>
@@ -25,7 +32,7 @@
                 <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar">
         {% if messages %}
             {% for message in messages %}
                 <p style="color: red;">{{message}}</p>
@@ -33,6 +40,7 @@
         {% endif %}
 
     </form>
+    <div class="img_cadastro"></div>
+
     {% endwith %}
-</body>
-</html>
+{% endblock %}

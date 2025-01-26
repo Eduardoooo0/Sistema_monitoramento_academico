@@ -1,15 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Página inicial</h1>
-    <hr>
-    <a href="{{url_for('alunos')}}">Alunos</a>|
-    <a href="{{url_for('disciplinas')}}">Disciplinas</a>|
-    <a href="{{url_for('atividades')}}">Atividades</a>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
+<div class="box_atividades">
+    <div class="alunos">
+        <div class="titulo">
+            <p>Cadastrar alunos</p>
+        </div>
+        <a id="cadastrar" href="{{url_for('cadastro_alunos')}}"><button>cadastrar</button></a>
+    </div>
+    <div class="cad_disciplinas">
+        <div class="titulo">
+            <p>Cadastrar disciplina</p>
+        </div>
+        <a id="cadastrar" href="{{url_for('cadastro_disciplinas')}}"><button>cadastrar</button></a>
+    </div>
+    <div class="cad_atividades">
+        <div class="titulo">
+            <p>Cadastrar atividade</p>
+        </div>
+        <a id="cadastrar" href="{{url_for('cadastro_atividades')}}"><button>cadastrar</button></a>
+        
+    </div>
+    <div class="frequencia">
+        <div class="titulo">
+            <p>Frequência</p>
+        </div>
+        <a id="cadastrar" href="{{url_for('frequencia')}}"><button>cadastrar</button></a>
+    </div>
+    
+</div>
+{% endblock %}

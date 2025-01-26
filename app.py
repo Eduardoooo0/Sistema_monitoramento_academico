@@ -11,6 +11,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = os.getenv('SENHA')
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_SSL_DISABLE'] = True
 
 mysql = MySQL(app)
 
@@ -241,14 +242,31 @@ def cadastro_entregas():
         nota = request.form['nota']
         cursor.execute('INSERT INTO tb_atividades_entrega(ate_data,ate_nota,ate_atv_id,ate_alu_id) VALUES (%s,%s,%s,%s)',(data,nota,atividade,aluno))
         mysql.connection.commit()
+
+        cursor.execute('SELECT dis_id FROM tb_disciplinas JOIN tb_atividades ON atv_dis_id = dis_id WHERE atv_id = %s',(atividade))
+        disciplina = cursor.fetchone()
+        cursor.execute('SELECT ate_alu_id,SUM(ate_nota * atv_peso)/SUM(atv_peso) AS media FROM tb_atividades JOIN tb_atividades_entrega ON atv_id = ate_atv_id WHERE ate_alu_id = %s GROUP BY ate_alu_id',(aluno))
+        media = cursor.fetchone()
+        # Verifica se a nota já existe
+        cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
+        resultado = cursor.fetchone()
+        if resultado:
+            # Atualiza a nota existente
+            cursor.execute('UPDATE tb_notas SET not_media = %s WHERE not_alu_id = %s', (media['media'], aluno))
+            mysql.connection.commit()
+            cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
+        else:
+            # Insere nova nota
+            print(f'entrei aqui media2 = {media['media']}')
+            cursor.execute('INSERT INTO tb_notas(not_alu_id, not_atv_id,not_dis_id, not_media) VALUES (%s, %s, %s,%s)', (aluno, atividade, disciplina['dis_id'] ,media['media']))
+            mysql.connection.commit()
         cursor.close()
         return redirect(url_for('atividades'))
-    cursor.execute('SELECT * FROM tb_atividades JOIN tb_disciplinas ON atv_dis_id = dis_id JOIN tb_cursos ON dis_cur_id = cur_id JOIN tb_alunos ON cur_id = alu_cur_id')
+    cursor.execute('SELECT * FROM tb_atividades')
     dados = cursor.fetchall()
     cursor.execute('SELECT * FROM tb_alunos')
     alunos = cursor.fetchall()
     return render_template('cadastro_entregas.html', dados=dados,alunos=alunos)
-
 
 @app.route('/frequencia', methods=['POST','GET'])
 def frequencia():
@@ -283,3 +301,15 @@ def frequencia():
             return redirect(url_for('frequencia'))
     return render_template('frequencia.html',disciplinas=disciplinas,cursos=cursos )
 
+
+@app.route('/relatorios')
+def relatorios():
+    return render_template('relatorios.html')
+
+
+@app.route('/exibir_media')
+def exibir_media():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT nome,disciplina,media FROM (SELECT alu_nome AS nome,dis_nome AS disciplina,SUM(not_media) AS media FROM tb_notas JOIN tb_atividades ON not_atv_id = atv_id JOIN tb_alunos ON not_alu_id = alu_id JOIN tb_disciplinas ON not_dis_id = dis_id GROUP BY atv_bimestre, alu_nome, dis_nome) AS subquery')
+    media = cursor.fetchall()
+    return render_template('exibir_media.html', media=media)

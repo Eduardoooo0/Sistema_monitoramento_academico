@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar disciplinas</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+{% endblock %}
+
+{% block section %}
     <h1>Cadastro de disciplinas</h1>
     <hr>
     {% with messages = get_flashed_messages() %}
-    <form action="{{url_for('cadastro_disciplinas')}}" method="post">
+    <form id="form_cadastro" action="{{url_for('cadastro_disciplinas')}}" method="post">
         <label>Código:</label>
         <input type="text" name="codigo" placeholder="Digite o código da disciplina" required>
         <label>Nome:</label>
@@ -30,7 +37,7 @@
         </select>
         <label>Carga horária:</label>
         <input type="number" name="carga" id="" placeholder="Digite a carga horária" required>
-        <input type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar">
         {% if messages %}
             {% for message in messages %}
                 <p style="color: red;">{{message}}</p>
@@ -39,5 +46,4 @@
 
     </form>
     {% endwith %}
-</body>
-</html>
+{% endblock %}

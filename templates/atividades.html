@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividades</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
     <h1>Página de atividades</h1>
     <hr>
     <a href="{{url_for('cadastro_atividades')}}">Cadastrar atividade</a>|
@@ -21,10 +29,9 @@
             <label>Professor: {{atv.pro_nome}}</label><br>
             <label>Curso: {{atv.cur_nome}}</label><br>
             <label>Descrição: {{atv.atv_descricao}}</label>
-            <a href="">Editar</a>|
-            <a href="">Deletar</a>
+            <a id="enviar" href="">Editar</a>|
+            <a id="enviar" href="">Deletar</a>
         </div>
         <br>
     {% endfor %}
-</body>
-</html>
+{% endblock %}

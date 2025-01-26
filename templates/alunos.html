@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alunos</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
     <h1>Página de alunos</h1>
     <hr>
     <a href="{{url_for('cadastro_alunos')}}">Cadastrar aluno</a>
@@ -16,12 +24,10 @@
             <label>Email: {{alu.alu_email}}</label><br>
             <label>Data de nascimento: {{alu.alu_data_nascimento}}</label><br>
             <label>Curso: {{alu.cur_nome}}</label><br>
-            
-            <a href="{{ url_for('editar_alunos', id=alu.alu_id) }}">Editar</a>
-            <a href="{{ url_for('excluir_alunos', id=alu.alu_id) }}" onclick="return confirm('Tem certeza que deseja deletar este aluno?');">Deletar</a>
-        
+            <a href="">Editar</a>|
+            <a href="">Deletar</a>
         </div>
         <br>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
+    

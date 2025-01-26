@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar entregas</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+{% endblock %}
+
+{% block section %}
     <h1>Cadastro de entrega de atividades</h1>
     <hr>
-    <form action="{{url_for('cadastro_entregas')}}" method="post">
+    <form id="form_cadastro" action="{{url_for('cadastro_entregas')}}" method="post">
         <label>Atividade:</label>
         <select name="atividade" id="">
             <option value="" selected disabled>Selecione a atividade</option>
@@ -27,7 +34,6 @@
         <input type="date" name="data" id="">
         <label>Nota obtida:</label>
         <input type="number" name="nota" id="" placeholder="Nota obtida">
-        <input type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar">
     </form>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
+        <a href="">Frequência</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
+    {% for aluno in media %}
+        <div>
+            <h2>{{ aluno.nome }}</h2>
+            {% for i in range(media | length) %}
+                <label>{{ media[i].disciplina }}: {{ media[i].media }}</label><br>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

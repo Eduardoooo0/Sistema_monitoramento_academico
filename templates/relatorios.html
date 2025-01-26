@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
+        <a href="">Frequência</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
+    <a href="{{url_for('exibir_media')}}">Média dos alunos</a>
+{% endblock %}

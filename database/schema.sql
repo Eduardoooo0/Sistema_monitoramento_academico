@@ -73,11 +73,13 @@ create table tb_atividades_entrega(
 
 create table tb_notas(
 	not_id int auto_increment not null primary key,
-    not_nota float not null,
+    not_media int not null,
     not_atv_id int,
-    not_ate_id int,
+    not_alu_id int,
+    not_dis_id int,
     foreign key (not_atv_id) references tb_atividades(atv_id),
-    foreign key (not_ate_id) references tb_atividades_entrega(ate_id)
+    foreign key (not_alu_id) references tb_alunos(alu_id),
+    foreign key (not_dis_id) references tb_disciplinas(dis_id)
 );
 
 
@@ -93,3 +95,4 @@ create table tb_frequencia(
     foreign key (frq_dis_id) references tb_disciplinas(dis_id),
     foreign key (frq_cur_id) references tb_cursos(cur_id)
 );
+
