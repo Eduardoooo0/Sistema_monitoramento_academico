@@ -29,8 +29,9 @@
             <label>Professor: {{atv.pro_nome}}</label><br>
             <label>Curso: {{atv.cur_nome}}</label><br>
             <label>Descrição: {{atv.atv_descricao}}</label>
-            <a id="enviar" href="">Editar</a>|
-            <a id="enviar" href="">Deletar</a>
+            <a href="{{ url_for('editar_atividades', id=atv.atv_id) }}">Editar</a>
+            <a href="{{ url_for('excluir_atividades', id=atv.atv_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta atividade?');">Deletar</a>
+        
         </div>
         <br>
     {% endfor %}
