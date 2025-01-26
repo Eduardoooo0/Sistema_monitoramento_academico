@@ -24,8 +24,10 @@ def alunos():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id')
     alunos = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_cursos')
+    cursos = cursor.fetchall()
 
-    return render_template('alunos.html',alunos=alunos)
+    return render_template('alunos.html',alunos=alunos, cursos = cursos)
 
 @app.route('/disciplinas')
 def disciplinas():
@@ -135,6 +137,41 @@ def excluir_alunos(id):
     return redirect(url_for('alunos'))
 
 
+@app.route('/filtrar_alunos', methods=['POST','GET'])
+def filtrar_alunos():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("SELECT alu_id FROM tb_alunos")
+    ids = cursor.fetchall()
+    ids = [row['alu_id'] for row in ids]
+    ids_alu = ','.join(map(str, ids))
+
+    col_nome = request.form.get('nome')
+    col_matricula = request.form.get('matricula')
+    col_email = request.form.get('email')
+    col_data_nascimento = request.form.get('data')
+    col_curso = request.form.get('curso')
+
+    text = f"SELECT alu_id, alu_nome, alu_matricula, alu_email, alu_data_nascimento, alu_cur_id, cur_nome FROM tb_alunos JOIN tb_cursos on alu_cur_id = cur_id WHERE alu_id in ({ids_alu})"
+
+    if col_nome:
+        text += f" and alu_nome = '{col_nome}'"
+    if col_matricula :
+        text += f" and alu_matricula = '{col_matricula}'"
+    if col_email :
+        text += f" and alu_email = '{col_email}'"
+    if col_data_nascimento :
+        text += f" and alu_data_nascimento = '{col_data_nascimento}'"
+    if col_curso:
+        text += f" and alu_cur_id = '{col_curso}'"
+    
+    cursor.execute(text)
+    alunos = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_cursos')
+    cursos = cursor.fetchall()
+    return render_template('alunos.html', alunos=alunos, cursos=cursos)
+
+
 @app.route('/cadastro_disciplinas', methods=['POST','GET'])
 def cadastro_disciplinas():
     cursor = mysql.connection.cursor()
@@ -213,6 +250,44 @@ def excluir_disciplinas(id):
     return redirect(url_for('disciplinas'))
 
 
+@app.route('/filtrar_disciplinas', methods=['POST','GET'])
+def filtrar_disciplinas():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("SELECT dis_id FROM tb_disciplinas")
+    ids = cursor.fetchall()
+    ids = [row['dis_id'] for row in ids]
+    ids_dis = ','.join(map(str, ids))
+
+    col_codigo = request.form.get('codigo')
+    col_nome = request.form.get('nome')
+    col_curso = request.form.get('curso')
+    col_professor = request.form.get('professor')
+    col_carga_horaria = request.form.get('carga')
+
+    text = f"SELECT dis_id, dis_nome, dis_codigo, dis_cur_id, dis_pro_id, dis_carga_horaria, cur_nome, pro_nome FROM tb_disciplinas JOIN tb_cursos on dis_cur_id = cur_id JOIN tb_professores ON dis_pro_id = pro_id WHERE dis_id in ({ids_dis})"
+
+    if col_nome:
+        text += f" and dis_nome = '{col_nome}'"
+    if col_codigo :
+        text += f" and dis_codigo = '{col_codigo}'"
+    if col_curso :
+        text += f" and dis_cur_id = '{col_curso}'"
+    if col_professor :
+        text += f" and dis_pro_id = '{col_professor}'"
+    if col_carga_horaria:
+        text += f" and dis_carga_horaria = '{col_carga_horaria}'"
+    
+    cursor.execute(text)
+    disciplinas = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_cursos')
+    cursos = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_professores')
+    professores = cursor.fetchall()
+    return render_template('disciplinas.html', disciplinas=disciplinas, cursos=cursos, professores=professores)
+
+
+
 @app.route('/cadastro_atividades', methods=['POST','GET'])
 def cadastro_atividades():
     cursor = mysql.connection.cursor()
@@ -231,6 +306,42 @@ def cadastro_atividades():
     cursor.execute('SELECT * FROM tb_disciplinas')
     disciplinas = cursor.fetchall()
     return render_template('cadastro_atv.html', disciplinas=disciplinas)
+
+
+
+@app.route('/editar_atividades/<int:id>', methods=['POST','GET'])
+def editar_atividades(id):
+    cursor = mysql.connection.cursor()
+    if request.method == 'GET':
+        cursor.execute('SELECT * FROM tb_atividades JOIN tb_disciplinas ON atv_dis_id = dis_id WHERE atv_id = (%s)', (id,))
+        atv = cursor.fetchone()
+        cursor.execute('SELECT * FROM tb_disciplinas')
+        disciplinas = cursor.fetchall()
+        return render_template('editar_atividades.html', atv=atv, disciplinas=disciplinas)
+
+    else:
+        titulo = request.form['titulo']
+        tipo = request.form.get('tipo')
+        descricao = request.form['descricao']
+        bimestre = request.form.get('bimestre')
+        peso = request.form['peso']
+        data_entrega = request.form['data']
+        disciplina = request.form.get('disciplina')
+
+        cursor.execute("UPDATE tb_atividades SET atv_titulo = (%s), atv_tipo = (%s), atv_descricao = (%s), atv_bimestre = (%s), atv_peso = (%s), atv_data = (%s), atv_dis_id = (%s) WHERE atv_id = (%s)", 
+                       (titulo,tipo,descricao,bimestre,peso,data_entrega,disciplina,id))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('atividades'))
+    
+@app.route('/excluir_atividades/<int:id>', methods=['POST','GET'])
+def excluir_atividades(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM tb_atividades WHERE atv_id = (%s)", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('atividades'))
+    
 
 @app.route('/cadastro_entregas', methods=['POST','GET'])
 def cadastro_entregas():
