@@ -24,10 +24,33 @@
             <label>Email: {{alu.alu_email}}</label><br>
             <label>Data de nascimento: {{alu.alu_data_nascimento}}</label><br>
             <label>Curso: {{alu.cur_nome}}</label><br>
-            <a href="">Editar</a>|
-            <a href="">Deletar</a>
+
+            <a href="{{ url_for('editar_alunos', id=alu.alu_id) }}">Editar</a>
+            <a href="{{ url_for('excluir_alunos', id=alu.alu_id) }}" onclick="return confirm('Tem certeza que deseja deletar este aluno?');">Deletar</a>
+        
         </div>
         <br>
     {% endfor %}
+
+    <h1>Filtrar</h1>
+    <form id="form_cadastro" action="{{url_for('filtrar_alunos')}}" method="post">
+        <label>Nome:</label>
+        <input type="text" name="nome" placeholder="Digite o nome do aluno(a)">
+        <label>Matricula:</label>
+        <input type="text" name="matricula" placeholder="Digite a matrícula do aluno(a)">
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Digite o email do aluno(a)">
+        <label>Data de nascimento:</label>
+        <input type="date" name="data">
+        <label>Curso:</label>
+        <select name="curso">
+            <option value="" selected disabled>Selecione o curso do aluno</option>
+            {% for curso in cursos %}
+                <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
+            {% endfor %}
+        </select>
+        <input id="enviar" type="submit" value="Enviar">
+
+    </form>
 {% endblock %}
     
