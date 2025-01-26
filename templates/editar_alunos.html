@@ -28,7 +28,7 @@
         <input type="date" name="data" value="{{aluno.alu_data_nascimento}}">
         <label>Curso:</label>
         <select name="curso">
-            <option value="{{aluno.cur_id}}" selected disabled>{{aluno.cur_nome}}</option>
+            <option value="{{aluno.cur_id}}" selected>{{aluno.cur_nome}}</option>
             {% for curso in cursos %}
                 <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
             {% endfor %}
