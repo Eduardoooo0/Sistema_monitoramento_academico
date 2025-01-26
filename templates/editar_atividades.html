@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="">Atividades</a>
+        <a href="">Disciplinas</a>
+        <a href="">Frequência</a>
+        <a href="">Relatórios</a>
+    </div>
+{% endblock %}
+
+{% block section %}
+    <h1>Editar atividade acadêmica</h1>
+    <hr>
+    <form id="form_cadastro" action="{{url_for('editar_atividades', id=atv.atv_id)}}" method="post">
+        <label>Titulo:</label>
+        <input type="text" name="titulo" placeholder="{{atv.atv_titulo}}" value="{{atv.atv_titulo}}">
+
+        <label>Tipo:</label>
+        <select name="tipo">
+            <option value="{{atv.atv_tipo}}" selected>{{atv.atv_tipo}}</option>
+            <option value="Prova">Prova</option>
+            <option value="Trabalho">Trabalho</option>
+            <option value="Projeto">Projeto</option>
+        </select>
+        <label>Descrição:</label>
+        <input type="text" name="descricao" placeholder="{{atv.atv_descricao}}" value="{{atv.atv_descricao}}">
+        <label>Peso:</label>
+        <input type="number" name="peso" placeholder="{{atv.atv_peso}}" value="{{atv.atv_peso}}">
+        <label>Data de entrega:</label>
+        <input type="date" name="data" value="{{atv.atv_data}}">
+        <label>Disciplina:</label>
+        <select name="disciplina" id="">
+            <option value="{{atv.dis_id}}" selected>{{atv.dis_nome}}</option>
+            {% for disc in disciplinas %}
+                <option value="{{disc.dis_id}}">{{disc.dis_nome}}</option>
+            {% endfor %}
+        </select>
+        <label>Bimestre:</label>
+        <select name="bimestre" id="">
+            <option value="{{atv.atv_bimestre}}" selected>{{atv.atv_bimestre}}° Bimestre</option>
+            <option value="1">1º Bimestre</option>
+            <option value="2">2º Bimestre</option>
+            <option value="3">3º Bimestre</option>
+            <option value="4">4º Bimestre</option>
+        </select>
+        <input id="enviar" type="submit" value="Enviar">
+    </form>
+{% endblock %}
