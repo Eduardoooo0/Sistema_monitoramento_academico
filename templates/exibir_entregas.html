@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('alunos')}}">Alunos</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
+        <a href="">Frequência</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
+    <form action="{{url_for('exibir_entregas')}}" method="post">
+        <label>Filtrar por:</label>
+        <input type="hidden" name="form_type" value="form1">
+        <select name="tipo">
+            <option value="" selected disabled>Selecione o filtro</option>
+            <option value="Aluno">Aluno</option>
+            <option value="Disciplina">Disciplina</option>
+            <option value="prazo">Entregue depois do prazo</option>
+        </select>
+        <input type="submit" value="Enviar">
+    </form>
+    {% if filtro == Aluno %}
+        {% for alu in alunos %}
+        <div>
+            <h1>{{alu.alu_nome}}</h1>
+            <!-- resto da lógica -->
+        </div>
+        {% endfor %}
+    {% elif filtro == 'Disciplina' %}
+        aaaab
+    {% elif filtro == 'prazo' %}
+        rereerre
+    {% endif %}
+{% endblock %}

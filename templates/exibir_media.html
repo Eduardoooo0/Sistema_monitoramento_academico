@@ -15,9 +15,7 @@
     {% for aluno in media %}
         <div>
             <h2>{{ aluno.nome }}</h2>
-            {% for i in range(media | length) %}
-                <label>{{ media[i].disciplina }}: {{ media[i].media }}</label><br>
-            {% endfor %}
+            <!-- resto da lógica -->
         </div>
     {% endfor %}
 {% endblock %}

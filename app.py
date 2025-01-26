@@ -234,8 +234,7 @@ def editar_disciplinas(id):
             flash('Nome já cadastrado.')
             return redirect(url_for('editar_disciplinas', id=id))
     
-        cursor.execute("UPDATE tb_disciplinas SET dis_codigo = (%s), dis_nome = (%s), dis_carga_horaria = (%s), dis_cur_id = (%s), dis_pro_id = (%s) WHERE dis_id = (%s)", 
-                       (codigo,nome,carga_horaria,curso,professor,id))
+        cursor.execute("UPDATE tb_disciplinas SET dis_codigo = (%s), dis_nome = (%s), dis_carga_horaria = (%s), dis_cur_id = (%s), dis_pro_id = (%s) WHERE dis_id = (%s)", (codigo,nome,carga_horaria,curso,professor,id))
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('disciplinas'))
@@ -424,3 +423,16 @@ def exibir_media():
     cursor.execute('SELECT nome,disciplina,media FROM (SELECT alu_nome AS nome,dis_nome AS disciplina,SUM(not_media) AS media FROM tb_notas JOIN tb_atividades ON not_atv_id = atv_id JOIN tb_alunos ON not_alu_id = alu_id JOIN tb_disciplinas ON not_dis_id = dis_id GROUP BY atv_bimestre, alu_nome, dis_nome) AS subquery')
     media = cursor.fetchall()
     return render_template('exibir_media.html', media=media)
+
+@app.route('/exibir_entregas', methods=['POST','GET'])
+def exibir_entregas():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        filtro = request.form.get('tipo')
+        if filtro == 'Aluno':
+            cursor.execute('SELECT * FROM tb_atividades_entrega JOIN tb_atividades ON ate_atv_id = atv_id GROUP BY ate_id')
+            atividades = cursor.fetchall()
+            cursor.execute('SELECT * FROM tb_atividades_entrega JOIN tb_alunos ON ate_alu_id = alu_id JOIN tb_atividades ON atv_id = ate_atv_id GROUP BY alu_id,ate_id,atv_id ')
+            atv_alunos = cursor.fetchall()
+            return render_template('exibir_entregas.html',alunos=atv_alunos,atividades=atividades)
+    return render_template('exibir_entregas.html',filtro='',alunos='')
