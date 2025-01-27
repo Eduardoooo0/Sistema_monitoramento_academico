@@ -472,9 +472,21 @@ def exibir_entregas():
     if request.method == 'POST':
         filtro = request.form.get('tipo')
         if filtro == 'Aluno':
-            cursor.execute('SELECT * FROM tb_atividades_entrega JOIN tb_atividades ON ate_atv_id = atv_id GROUP BY ate_id')
+            cursor.execute('SELECT alu_nome, COUNT(*) AS total_entregas FROM tb_atividades_entrega JOIN tb_alunos ON alu_id = ate_alu_id GROUP BY alu_nome')
             atividades = cursor.fetchall()
-            cursor.execute('SELECT * FROM tb_atividades_entrega JOIN tb_alunos ON ate_alu_id = alu_id JOIN tb_atividades ON atv_id = ate_atv_id GROUP BY alu_id,ate_id,atv_id ')
-            atv_alunos = cursor.fetchall()
-            return render_template('exibir_entregas.html',alunos=atv_alunos,atividades=atividades)
+            cursor.execute('SELECT atv_titulo AS title FROM tb_atividades')
+            nomes = cursor.fetchall()
+            return render_template('exibir_entregas.html',filtro=filtro,atividades=atividades, nomes=nomes)
+        elif filtro == 'Disciplina':
+            cursor.execute('SELECT dis_nome, COUNT(*) AS total_entregas FROM tb_atividades_entrega JOIN tb_atividades ON ate_atv_id = atv_id JOIN tb_disciplinas ON dis_id = atv_dis_id GROUP BY dis_nome')
+            disciplinas = cursor.fetchall()
+            cursor.execute('SELECT atv_titulo AS title FROM tb_atividades')
+            nomes = cursor.fetchall()
+            return render_template('exibir_entregas.html',filtro=filtro,atividades=disciplinas,nomes=nomes)
+        elif filtro == 'prazo':
+            cursor.execute('SELECT atv_titulo FROM tb_atividades JOIN tb_atividades_entrega ON atv_id = ate_atv_id WHERE ate_data > atv_data')
+            datas = cursor.fetchall()
+            cursor.execute('SELECT atv_titulo AS title FROM tb_atividades')
+            nomes = cursor.fetchall()
+            return render_template('exibir_entregas.html',filtro=filtro,atividades=datas,nomes=nomes)
     return render_template('exibir_entregas.html',filtro='',alunos='')
