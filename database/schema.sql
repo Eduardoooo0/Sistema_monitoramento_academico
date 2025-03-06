@@ -2,9 +2,21 @@ drop database if exists db_academico;
 create database db_academico;
 use db_academico;
 
+
+
+create table tb_usuarios(
+	usu_id int auto_increment not null primary key,
+    usu_nome varchar(100) not null,
+    usu_email varchar(100) not null unique,
+    usu_tipo enum('Aluno','Professor','Admin'),
+    usu_senha varchar(100) not null
+);
+
 create table tb_professores(
 	pro_id int auto_increment not null primary key,
-	pro_nome varchar(100) not null
+	pro_nome varchar(100) not null,
+    pro_usu_id int,
+    foreign key (pro_usu_id) references tb_usuarios(usu_id)
 );
 
 insert into tb_professores(pro_nome) values 
@@ -41,7 +53,9 @@ create table tb_alunos(
     alu_email varchar(100) unique,
     alu_data_nascimento date,
     alu_cur_id int,
-    foreign key (alu_cur_id) references tb_cursos(cur_id)
+    alu_usu_id int,
+    foreign key (alu_cur_id) references tb_cursos(cur_id),
+    foreign key (alu_usu_id) references tb_usuarios(usu_id)
 );
 
 create table tb_disciplinas(

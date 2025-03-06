@@ -1,14 +1,29 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session,make_response
 from flask_mysqldb import MySQL
 import os
+from flask_login import LoginManager
+from werkzeug.security import generate_password_hash
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'senha'
+
+
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'user.login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return user_id
+
 
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -17,6 +32,10 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    cursor = mysql.connection.cursor()
+    cursor.execute('INSERT INTO tb_usuarios(usu_nome,usu_email,usu_senha, usu_tipo) VALUES (%s,%s,%s,%s)',(os.getenv('NOME'),os.getenv('EMAIL'),generate_password_hash(os.getenv('SENHA')),os.getenv('TIPO')))
+    mysql.connection.commit()
+    cursor.close()
     return render_template('index.html')
 
 @app.route('/alunos')
@@ -76,6 +95,11 @@ def cadastro_alunos():
     cursos = cursor.fetchall()
     return render_template('cadastro_alunos.html', cursos=cursos)
 
+@app.route('/login', methods = ['POST','GET'])
+def login():
+    if request.method == 'POST':
+        pass
+    return render_template('login.html')
 
 @app.route('/editar_alunos/<int:id>', methods=['POST','GET'])
 def editar_alunos(id):
@@ -488,4 +512,8 @@ def exibir_entregas():
             cursor.execute('SELECT atv_titulo AS title FROM tb_atividades')
             nomes = cursor.fetchall()
             return render_template('exibir_entregas.html',filtro=filtro,atividades=datas,nomes=nomes)
+<<<<<<< HEAD
     return render_template('exibir_entregas.html',filtro='',alunos='')
+=======
+    return render_template('exibir_entregas.html',filtro='',alunos='')
+>>>>>>> 2b9727fae42af59f4909414754b7cb12c0e74536
