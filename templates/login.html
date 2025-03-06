@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 {% block section %}
+    {% with messages = get_flashed_messages() %}
     <form action="{{url_for('login')}}" method="post">
-        <label for="matricula">Matricula</label>
-        <input type="text" name="matricula" required>
-        <label for="senha">Senha</label>
-        <input type="password" name="senha" required>
+        <label for="email">Email:</label>
+        <input type="text" name="email" required> <br>
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" required><br>
+        {% if messages %}
+            {% for message in messages %}
+                <p id="flashMessage" style="color: red;">{{message}}</p>
+            {% endfor %}
+        {% endif %}
         <input type="submit" value="Enviar">
     </form>
+    {% endwith %}
 {% endblock %}

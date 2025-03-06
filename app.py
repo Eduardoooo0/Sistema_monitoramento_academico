@@ -1,8 +1,8 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session,make_response
 from flask_mysqldb import MySQL
 import os
-from flask_login import LoginManager
-from werkzeug.security import generate_password_hash
+from flask_login import LoginManager, current_user, login_required,login_user, logout_user, UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -14,11 +14,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'user.login'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return user_id
-
-
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -29,16 +24,28 @@ app.config['MYSQL_SSL_DISABLE'] = True
 
 mysql = MySQL(app)
 
-@app.route('/')
-def index():
+class User(UserMixin):
+    def __init__(self, id, username,type):
+        self.id = id
+        self.username = username
+        self.type = type
+
+@login_manager.user_loader
+def load_user(user_id):
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM tb_usuarios WHERE usu_id=1')
-    admin = cursor.fetchone()
-    if admin is None:
-        cursor.execute('INSERT INTO tb_usuarios(usu_nome,usu_email,usu_senha, usu_tipo) VALUES (%s,%s,%s,%s)',(os.getenv('NOME'),os.getenv('EMAIL'),generate_password_hash(os.getenv('SENHA')),os.getenv('TIPO')))
-        mysql.connection.commit()
-        cursor.close()
-    return render_template('index.html')
+    cursor.execute('SELECT usu_id,usu_nome,usu_tipo FROM tb_usuarios WHERE usu_id = (%s)',(user_id))
+    user = cursor.fetchone()
+    return User(user['usu_id'],user['usu_nome'],user['usu_tipo'])
+
+
+
+@app.route('/')
+@login_required
+def index():
+    if current_user.is_authenticated:
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/alunos')
 def alunos():
@@ -99,9 +106,35 @@ def cadastro_alunos():
 
 @app.route('/login', methods = ['POST','GET'])
 def login():
+    cursor = mysql.connection.cursor()
     if request.method == 'POST':
-        pass
+        email = request.form['email']
+        senha = request.form['senha']
+        cursor.execute('SELECT * FROM tb_usuarios WHERE usu_email=(%s)',(email,))
+        user = cursor.fetchone()
+        check_senha = check_password_hash(user['usu_senha'],senha)
+        if email and check_senha:
+            user = User(user['usu_id'],user['usu_nome'],user['usu_tipo'])
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Email ou senha inválido(s).')
+            return render_template('login.html')
+    cursor.execute('SELECT * FROM tb_usuarios WHERE usu_id=1')
+    admin = cursor.fetchone()
+    if admin is None:
+        cursor.execute('INSERT INTO tb_usuarios(usu_nome,usu_email,usu_senha, usu_tipo) VALUES (%s,%s,%s,%s)',(os.getenv('NOME'),os.getenv('EMAIL'),generate_password_hash(os.getenv('SENHA')),os.getenv('TIPO')))
+        mysql.connection.commit()
+        cursor.close()
     return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logout realizado com sucesso!!!')
+    return redirect(url_for('login'))
 
 @app.route('/editar_alunos/<int:id>', methods=['POST','GET'])
 def editar_alunos(id):

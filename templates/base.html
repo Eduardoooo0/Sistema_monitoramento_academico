@@ -23,5 +23,20 @@
             
         </section>
     </div>
+
+
+    <script>
+        var flash = document.getElementById('flashMessage');
+        if (flash) {
+            // Define o estilo para exibir o flashMessage
+            flash.style.display = 'block';
+    
+            // Espera 2 segundos
+            setTimeout(function() {
+                // Oculta o contêiner da resposta
+                flash.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
