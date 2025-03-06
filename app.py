@@ -23,6 +23,10 @@ def load_user(user_id):
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
+<<<<<<< HEAD
+=======
+app.config['MYSQL_PASSWORD'] = ''
+>>>>>>> 1dfdc872ea37f78fba1705949525b6701a41351d
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -511,4 +515,8 @@ def exibir_entregas():
             cursor.execute('SELECT atv_titulo AS title FROM tb_atividades')
             nomes = cursor.fetchall()
             return render_template('exibir_entregas.html',filtro=filtro,atividades=datas,nomes=nomes)
+<<<<<<< HEAD
     return render_template('exibir_entregas.html',filtro='',alunos='')
+=======
+    return render_template('exibir_entregas.html',filtro='',alunos='')
+>>>>>>> 2b9727fae42af59f4909414754b7cb12c0e74536

@@ -5,17 +5,17 @@
     <div class="botoes">
         <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="">Atividades</a>
-        <a href="">Disciplinas</a>
-        <a href="">Frequência</a>
-        <a href="">Relatórios</a>
+        <a href="{{url_for('atividades')}}"style="background-color: black; color: white;">Atividades</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
 {% endblock %}
 
 {% block section %}
     <h1>Editar atividade acadêmica</h1>
     <hr>
-    <form id="form_cadastro" action="{{url_for('editar_atividades', id=atv.atv_id)}}" method="post">
+    <form id="form_cad_atividades" action="{{url_for('editar_atividades', id=atv.atv_id)}}" method="post">
         <label>Titulo:</label>
         <input type="text" name="titulo" placeholder="{{atv.atv_titulo}}" value="{{atv.atv_titulo}}">
 
