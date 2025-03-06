@@ -9,7 +9,7 @@ create table tb_usuarios(
     usu_nome varchar(100) not null,
     usu_email varchar(100) not null unique,
     usu_tipo enum('Aluno','Professor','Admin'),
-    usu_senha varchar(100) not null
+    usu_senha text not null
 );
 
 create table tb_professores(

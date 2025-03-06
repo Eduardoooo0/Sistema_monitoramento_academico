@@ -22,7 +22,7 @@ def load_user(user_id):
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -432,7 +432,6 @@ def cadastro_entregas():
             cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
         else:
             # Insere nova nota
-            print(f'entrei aqui media2 = {media['media']}')
             cursor.execute('INSERT INTO tb_notas(not_alu_id, not_atv_id,not_dis_id, not_media) VALUES (%s, %s, %s,%s)', (aluno, atividade, disciplina['dis_id'] ,media['media']))
             mysql.connection.commit()
         cursor.close()
