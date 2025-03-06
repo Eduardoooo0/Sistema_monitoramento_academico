@@ -5,10 +5,10 @@
     <div class="botoes">
         <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="">Atividades</a>
-        <a href="">Disciplinas</a>
-        <a href="">Frequência</a>
-        <a href="">Relatórios</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('disciplinas')}}"style="background-color: black; color: white;">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
 {% endblock %}
 
@@ -16,7 +16,7 @@
     <h1>Cadastro de disciplinas</h1>
     <hr>
     {% with messages = get_flashed_messages() %}
-    <form id="form_cadastro" action="{{url_for('cadastro_disciplinas')}}" method="post">
+    <form id="form_cad" action="{{url_for('cadastro_disciplinas')}}" method="post">
         <label>Código:</label>
         <input type="text" name="codigo" placeholder="Digite o código da disciplina" required>
         <label>Nome:</label>

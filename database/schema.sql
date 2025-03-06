@@ -10,6 +10,14 @@ create table tb_professores(
 insert into tb_professores(pro_nome) values 
 ('Romerito'),
 ('Hugo'),
+('Cleysyvan'),
+('Julianna'),
+('Pablo'),
+('Vinicius'),
+('Jossefrania'),
+('Mazé'),
+('Janduir'),
+('Cícero'),
 ('Iuri');
 
 create table tb_cursos(

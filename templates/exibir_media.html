@@ -3,19 +3,23 @@
 {% block aside %}
     <br>
     <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
         <a href="{{url_for('atividades')}}">Atividades</a>
-        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
-        <a href="">Frequência</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}"style="background-color: black; color: white;">Relatórios</a>
     </div>
     
 {% endblock %}
 
 {% block section %}
+    <h2>Média dos alunos:</h2>
     {% for aluno in media %}
-        <div>
+        <div id="listar_frequencia">
             <h2>{{ aluno.nome }}</h2>
-            <!-- resto da lógica -->
+            <label>Média:</label>
+            <label>{{aluno.media}}</label>
         </div>
     {% endfor %}
 {% endblock %}

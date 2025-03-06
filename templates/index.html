@@ -3,10 +3,11 @@
 {% block aside %}
     <br>
     <div class="botoes">
+        <a href="{{url_for('index')}}"style="background-color: black; color: white;">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
         <a href="{{url_for('atividades')}}">Atividades</a>
         <a href="{{url_for('disciplinas')}}">Disciplinas</a>
-        <a href="">Frequência</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
         <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
     
@@ -14,30 +15,29 @@
 
 {% block section %}
 <div class="box_atividades">
-    <div class="alunos">
+    <div class="cad_alunos">
         <div class="titulo">
             <p>Cadastrar alunos</p>
         </div>
-        <a id="cadastrar" href="{{url_for('cadastro_alunos')}}"><button>cadastrar</button></a>
+        <a id="cadastrar" href="{{url_for('cadastro_alunos')}}"><img src="../static/imgs/alunos.png" alt=""></a>
     </div>
     <div class="cad_disciplinas">
         <div class="titulo">
             <p>Cadastrar disciplina</p>
         </div>
-        <a id="cadastrar" href="{{url_for('cadastro_disciplinas')}}"><button>cadastrar</button></a>
+        <a id="cadastrar" href="{{url_for('cadastro_disciplinas')}}"><img src="../static/imgs/disciplina.png" alt=""></a>
     </div>
     <div class="cad_atividades">
         <div class="titulo">
             <p>Cadastrar atividade</p>
         </div>
-        <a id="cadastrar" href="{{url_for('cadastro_atividades')}}"><button>cadastrar</button></a>
-        
+        <a id="cadastrar" href="{{url_for('cadastro_atividades')}}"><img src="../static/imgs/atividades.png" alt=""></a>
     </div>
     <div class="frequencia">
         <div class="titulo">
             <p>Frequência</p>
         </div>
-        <a id="cadastrar" href="{{url_for('frequencia')}}"><button>cadastrar</button></a>
+        <a id="cadastrar" href="{{url_for('frequencia')}}"><img src="../static/imgs/frequencia.png" alt=""></a>
     </div>
     
 </div>

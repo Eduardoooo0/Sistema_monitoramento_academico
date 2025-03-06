@@ -5,10 +5,10 @@
     <div class="botoes">
         <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="">Atividades</a>
-        <a href="">Disciplinas</a>
-        <a href="">Frequência</a>
-        <a href="">Relatórios</a>
+        <a href="{{url_for('atividades')}}"style="background-color: black; color: white;">Atividades</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
     
 {% endblock %}
@@ -16,30 +16,10 @@
 {% block section %}
     <h1>Página de atividades</h1>
     <hr>
-    <a href="{{url_for('cadastro_atividades')}}">Cadastrar atividade</a>|
-    <a href="{{url_for('cadastro_entregas')}}">Cadastrar entrega de atividade</a>
-    {% for atv in atividades %}
-        <div style="border: 1px solid black; width: 25%; padding: 10px;">
-            <h2>{{atv.atv_titulo}}</h2>
-            <label>Tipo: {{atv.atv_tipo}}</label><br>
-            <label>Peso: {{atv.atv_peso}}</label><br>
-            <label>Bimestre: {{atv.atv_bimestre}}</label>
-            <label>Prazo de entrega: {{atv.atv_data}}</label><br>
-            <label>Disciplina: {{atv.dis_nome}}</label><br>
-            <label>Professor: {{atv.pro_nome}}</label><br>
-            <label>Curso: {{atv.cur_nome}}</label><br>
-            <label>Descrição: {{atv.atv_descricao}}</label>
-            <a href="{{ url_for('editar_atividades', id=atv.atv_id) }}">Editar</a>
-            <a href="{{ url_for('excluir_atividades', id=atv.atv_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta atividade?');">Deletar</a>
-        
-        </div>
-        <br>
-    {% endfor %}
-
 
     <h1>Filtrar</h1>
 
-    <form id="form_cadastro" action="{{url_for('filtrar_atividades')}}" method="post">
+    <form id="filtro_atvd" action="{{url_for('filtrar_atividades')}}" method="post">
         <label>Titulo:</label>
         <input type="text" name="titulo" placeholder="Digite um titulo para a atividade">
         <label>Tipo:</label>
@@ -72,4 +52,33 @@
         </select>
         <input id="enviar" type="submit" value="Enviar">
     </form>
+
+    <div class="box_button">
+        <a id="button" href="{{url_for('cadastro_atividades')}}">Cadastrar atividade</a>
+        <a id="button" href="{{url_for('cadastro_entregas')}}">Cadastrar entrega de atividade</a>
+    </div>
+
+    <div class="box1">
+        {% for atv in atividades %}
+            <div id="box2">
+                <h2>{{atv.atv_titulo}}</h2>
+                <label>Tipo: {{atv.atv_tipo}}</label><br>
+                <label>Peso: {{atv.atv_peso}}</label><br>
+                <label>Bimestre: {{atv.atv_bimestre}}</label>
+                <label>Prazo de entrega: {{atv.atv_data}}</label><br>
+                <label>Disciplina: {{atv.dis_nome}}</label><br>
+                <label>Professor: {{atv.pro_nome}}</label><br>
+                <label>Curso: {{atv.cur_nome}}</label><br>
+                <label>Descrição: {{atv.atv_descricao}}</label>
+                <br>
+                <br>
+                <a href="{{ url_for('editar_atividades', id=atv.atv_id) }}">Editar</a>
+                <a href="{{ url_for('excluir_atividades', id=atv.atv_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta atividade?');">Deletar</a>
+            
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+
+
 {% endblock %}

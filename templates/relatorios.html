@@ -3,15 +3,24 @@
 {% block aside %}
     <br>
     <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
         <a href="{{url_for('atividades')}}">Atividades</a>
-        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
-        <a href="">Frequência</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}"style="background-color: black; color: white;">Relatórios</a>
     </div>
     
 {% endblock %}
 
 {% block section %}
-    <a href="{{url_for('exibir_media')}}">Média dos alunos</a>
-    <a href="{{url_for('exibir_entregas')}}">Lista de atividades entregues</a>
+    <div id="section_relatorio">
+
+        <h2 id="h2_relatorio">Relatórios Acadêmicos</h2>
+        <div id="div_relatorios">
+            <a href="{{url_for('exibir_media')}}">Média dos alunos</a>
+            <a href="{{url_for('exibir_entregas')}}">Lista de atividades entregues</a>
+        </div>
+        
+    </div>
 {% endblock %}

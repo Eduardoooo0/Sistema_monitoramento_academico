@@ -3,16 +3,19 @@
 {% block aside %}
     <br>
     <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
         <a href="{{url_for('atividades')}}">Atividades</a>
-        <a href="{{url_for('cadastro_disciplinas')}}">Disciplinas</a>
-        <a href="">Frequência</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}"style="background-color: black; color: white;">Relatórios</a>
     </div>
     
 {% endblock %}
 
 {% block section %}
-    <form action="{{url_for('exibir_entregas')}}" method="post">
+    <h1>Atividades entregues:</h1>
+    <form id="form_frequencia" action="{{url_for('exibir_entregas')}}" method="post">
         <label>Filtrar por:</label>
         <input type="hidden" name="form_type" value="form1">
         <select name="tipo">
@@ -21,18 +24,32 @@
             <option value="Disciplina">Disciplina</option>
             <option value="prazo">Entregue depois do prazo</option>
         </select>
-        <input type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar">
     </form>
-    {% if filtro == Aluno %}
-        {% for alu in alunos %}
-        <div>
-            <h1>{{alu.alu_nome}}</h1>
-            <!-- resto da lógica -->
-        </div>
+    {% if filtro == 'Aluno' %}
+        {% for alu in atividades %}
+            <div id="listar_frequencia">
+                <h2>{{alu.alu_nome}}</h2>
+                <label>Atividades entregues:</label><br>
+                {% for i in range(alu.total_entregas) %}
+                    <label >{{nomes[i]['title']}}</label>
+                {% endfor %}
+            </div>
         {% endfor %}
     {% elif filtro == 'Disciplina' %}
-        aaaab
+        {% for alu in atividades %}
+            <div id="listar_frequencia">
+                <h2>{{alu.dis_nome}}</h2>
+                <label>Atividades entregues:</label><br>
+                {% for i in nomes %}
+                    <label >{{i.title}}</label>
+                {% endfor %}
+            </div>
+        {% endfor %}
     {% elif filtro == 'prazo' %}
-        rereerre
+        <h2>Atividades entregues depois do prazo:</h2><br>
+        {% for alu in atividades %}
+            <label>{{alu.atv_titulo}}</label>
+        {% endfor %}
     {% endif %}
 {% endblock %}

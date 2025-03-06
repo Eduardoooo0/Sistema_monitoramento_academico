@@ -5,32 +5,19 @@
     <div class="botoes">
         <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="">Atividades</a>
-        <a href="">Disciplinas</a>
-        <a href="">Frequência</a>
-        <a href="">Relatórios</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('disciplinas')}}"style="background-color: black; color: white;">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
 {% endblock %}
 
 {% block section %}
     <h1>Página de disciplinas</h1>
     <hr>
-    <a href="{{url_for('cadastro_disciplinas')}}">Cadastrar disciplina</a>
-    {% for dis in disciplinas %}
-        <div style="border: 1px solid black; width: 25%; padding: 10px;">
-            <h2>{{dis.dis_nome}}</h2>
-            <label>Código: {{dis.dis_codigo}}</label><br>
-            <label>Carga horária: {{dis.dis_carga_horaria}}</label><br>
-            <label>Professor: {{dis.pro_nome}}</label><br>
-            <label>Curso: {{dis.cur_nome}}</label><br>
-            <a href="{{ url_for('editar_disciplinas', id=dis.dis_id) }}">Editar</a>
-            <a href="{{ url_for('excluir_disciplinas', id=dis.dis_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta disciplina?');">Deletar</a>
-        </div>
-        <br>
-    {% endfor %}
 
     <h1>Filtrar</h1>
-    <form id="form_cadastro" action="{{url_for('filtrar_disciplinas')}}" method="post">
+    <form id="filtro" action="{{url_for('filtrar_disciplinas')}}" method="post">
         <label>Código:</label>
         <input type="text" name="codigo" placeholder="Digite o código da disciplina">
         <label>Nome:</label>
@@ -52,7 +39,25 @@
         <label>Carga horária:</label>
         <input type="number" name="carga" id="" placeholder="Digite a carga horária">
         <input id="enviar" type="submit" value="Enviar">
-        
-
     </form>
+
+    <div class="box_button">
+        <a id="button" href="{{url_for('cadastro_disciplinas')}}">Cadastrar disciplina</a>
+    </div>
+    
+    <div class="box1">
+        {% for dis in disciplinas %}
+            <div id="box2">
+                <h2>{{dis.dis_nome}}</h2>
+                <label>Código: {{dis.dis_codigo}}</label><br>
+                <label>Carga horária: {{dis.dis_carga_horaria}}</label><br>
+                <label>Professor: {{dis.pro_nome}}</label><br>
+                <label>Curso: {{dis.cur_nome}}</label><br><br>
+                <a href="{{ url_for('editar_disciplinas', id=dis.dis_id) }}">Editar</a>
+                <a href="{{ url_for('excluir_disciplinas', id=dis.dis_id) }}" onclick="return confirm('Tem certeza que deseja deletar esta disciplina?');">Deletar</a>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+
 {% endblock %}

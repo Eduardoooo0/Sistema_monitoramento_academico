@@ -5,17 +5,17 @@
     <div class="botoes">
         <a href="{{url_for('index')}}">Inicio</a>
         <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="">Atividades</a>
-        <a href="">Disciplinas</a>
-        <a href="">Frequência</a>
-        <a href="">Relatórios</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}"style="background-color: black; color: white;">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
     </div>
 {% endblock %}
 
 {% block section %}
     <h1>Frequência</h1>
     <hr>
-    <form id="form_cadastro" action="{{url_for('frequencia')}}" method="post">
+    <form id="form_frequencia" action="{{url_for('frequencia')}}" method="post">
         <input type="hidden" name="form_type" value="form1">
         <label>Curso:</label>
         <select name="curso" onchange="atualizarDisciplinas()">
@@ -33,21 +33,22 @@
         <input id="enviar" type="submit" value="Enviar">
     </form>
     {% if dados %}
-        <form id="form_cadastro" action="{{ url_for('frequencia') }}" method="post">
+        <form id="listar_frequencia" action="{{ url_for('frequencia') }}" method="post">
             <input type="hidden" name="form_type" value="form2">
             <label>Data:</label>
-            <input type="date" name="data" id="data" required>
+            <input type="date" name="data" id="data" required style="margin-bottom: 10px;">
+            <h3 style="margin-top: 20px;">Alunos:</h3>
             {% for alu in dados %}
-                <div style="border: 1px solid black; width: 25%; display: flex; flex-direction: row; justify-content: space-around;">
+                <div style="border: 1px solid black; display: flex; flex-direction: row; margin-top: 10px;padding: 1%;width: 40%;">
                     <label for="aluno">{{ alu.alu_nome }}</label>
-                    <select name="presenca_{{ alu.alu_id }}">
+                    <select style="margin-left: 50%;" name="presenca_{{ alu.alu_id }}">
                         <option value="Presente">Presente</option>
                         <option value="Falta">Falta</option>
                     </select>
                 </div>
             {% endfor %}
             
-            <input id="enviar" type="submit" value="Enviar">
+            <input id="enviar_frequencia" type="submit" value="Enviar">
         </form>
     {% endif %}
 
