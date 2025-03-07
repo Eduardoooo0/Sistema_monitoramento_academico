@@ -8,32 +8,37 @@
 </head>
 <body>
     <section>
-        <div class="login-container">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash-messages">
-                        {% for message in messages %}
-                            <p class="error-message">{{ message }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-        
-            <form action="{{ url_for('login') }}" method="post" class="login-form">
-                <h2>LOGIN</h2>
-                <label for="email">Email:</label>
-                <input type="text" name="email" class="input-field" required> 
-                
-                <label for="senha">Senha:</label>
-                <input type="password" name="senha" class="input-field" required>
+        <div class="conteiner">
+            <div class="box1">
+                <img src="../static/imgs/huguinhodigital.png" alt="">
+            </div>
+            <div class="login-container">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for message in messages %}
+                                <p class="error-message">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            
+                <form action="{{ url_for('login') }}" method="post" class="login-form">
+                    <h2>LOGIN</h2>
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" class="input-field" required> 
+                    
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="senha" class="input-field" required>
+                    
                 
             
-        
-                <input type="submit" value="Entrar" class="btn">
-                
-                <label for="link">Esqueceu a senha?</label><a href="{{url_for('editar_senha')}}">Alterar Senha</a>
-
-            </form>
+                    <input type="submit" value="Entrar" class="btn">
+                    
+                    <p><label for="link">Esqueceu a senha?</label><a href="{{url_for('editar_senha')}}">Alterar Senha</a></p>
+    
+                </form>
+            </div>
         </div>
     </section>
 </body>

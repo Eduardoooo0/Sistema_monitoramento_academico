@@ -21,6 +21,9 @@
         <input type="password" name="senha" class="input-field" required>
         <input type="submit" value="Entrar" class="btn">
     </form>
-    <label for="link">Já tem uma conta?</label><a href="{{url_for('login')}}">Entrar</a>
+    <div class="senha" style="display: flex; flex-direction: row;">
+        <label for="link">Já tem uma conta?</label><a href="{{url_for('login')}}">Entrar</a>
+    </div>
+    
 </div>
 {% endblock %}
