@@ -1,18 +1,5 @@
 {% extends 'base.html' %}
 
-{% block aside %}
-    <br>
-    <div class="botoes">
-        <a href="{{url_for('index')}}">Inicio</a>
-        <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="{{url_for('atividades')}}">Atividades</a>
-        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
-        <a href="{{url_for('frequencia')}}">Frequência</a>
-        <a href="{{url_for('relatorios')}}"style="background-color: black; color: white;">Relatórios</a>
-    </div>
-    
-{% endblock %}
-
 {% block section %}
     <h1>Atividades entregues:</h1>
     <form id="form_frequencia" action="{{url_for('exibir_entregas')}}" method="post">
@@ -28,7 +15,6 @@
     </form>
     {% if filtro == 'Aluno' %}
         {% for alu in atividades %}
-<<<<<<< HEAD
             <div id="listar_frequencia">
                 <h2>{{alu.alu_nome}}</h2>
                 <label>Atividades entregues:</label><br>
@@ -46,21 +32,6 @@
                     <label >{{i.title}}</label>
                 {% endfor %}
             </div>
-=======
-            <h2>{{alu.alu_nome}}</h2>
-            <label>Atividades entregues:</label><br>
-            {% for i in range(alu.total_entregas) %}
-                <label >{{nomes[i]['title']}}</label>
-            {% endfor %}
-        {% endfor %}
-    {% elif filtro == 'Disciplina' %}
-        {% for alu in atividades %}
-            <h2>{{alu.dis_nome}}</h2>
-            <label>Atividades entregues:</label><br>
-            {% for i in nomes %}
-                <label >{{i.title}}</label>
-            {% endfor %}
->>>>>>> 2b9727fae42af59f4909414754b7cb12c0e74536
         {% endfor %}
     {% elif filtro == 'prazo' %}
         <h2>Atividades entregues depois do prazo:</h2><br>

@@ -11,9 +11,30 @@
         <aside>
             <div class="logo"></div>
             
-            {% block aside %}
-                
-            {% endblock %}
+            {% if current_user.is_authenticated %}
+                {% if current_user.type == 'Admin' %}
+                    <br>
+                    <div class="botoes">
+                        <a href="{{url_for('alunos')}}">Alunos</a>
+                        <a href="{{url_for('atividades')}}">Atividades</a>
+                        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+                        <!-- <a href="">Frequência</a> -->
+                        <a href="{{url_for('relatorios')}}">Relatórios</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                {% elif current_user.type == 'Professor' %}
+                    <div class="botoes">
+                        <a href="{{url_for('alunos')}}">Alunos</a>
+                        <a href="{{url_for('atividades')}}">Atividades</a>
+                        <a href="">Frequência</a>
+                    </div>
+                {% else %}
+                    <div class="botoes">
+                        <a href="{{url_for('atividades')}}">Atividades</a>
+                        <a href="">Frequência</a>
+                    </div>
+                {% endif %}
+            {% endif %}
         </aside>
         <section>
             

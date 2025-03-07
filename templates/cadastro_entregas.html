@@ -1,17 +1,5 @@
 {% extends 'base.html' %}
 
-{% block aside %}
-    <br>
-    <div class="botoes">
-        <a href="{{url_for('index')}}">Inicio</a>
-        <a href="{{url_for('alunos')}}">Alunos</a>
-        <a href="{{url_for('atividades')}}"style="background-color: black; color: white;">Atividades</a>
-        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
-        <a href="{{url_for('frequencia')}}">Frequência</a>
-        <a href="{{url_for('relatorios')}}">Relatórios</a>
-    </div>
-{% endblock %}
-
 {% block section %}
     <h1>Cadastro de entrega de atividades</h1>
     <hr>
