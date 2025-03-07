@@ -8,18 +8,38 @@ create table tb_usuarios(
 	usu_id int auto_increment not null primary key,
     usu_nome varchar(100) not null,
     usu_email varchar(100) not null unique,
+    usu_data_nascimento date,
     usu_tipo enum('Aluno','Professor','Admin'),
     usu_senha text not null
 );
 
+
 create table tb_professores(
 	pro_id int auto_increment not null primary key,
-	pro_nome varchar(100) not null,
     pro_usu_id int,
     foreign key (pro_usu_id) references tb_usuarios(usu_id)
 );
 
-insert into tb_professores(pro_nome) values 
+delimiter //
+
+create trigger add_foreign after insert
+on tb_usuarios
+for each row
+begin
+	if new.usu_tipo = 'Aluno' then
+        insert into tb_alunos(alu_usu_id)
+        values (new.usu_id);
+    end if;
+    
+    if new.usu_tipo = 'Professor' then
+        insert into tb_Professores(pro_usu_id)
+        values (new.usu_id);
+    end if;
+end//
+
+delimiter ;
+
+/*insert into tb_professores(pro_nome) values 
 ('Romerito'),
 ('Hugo'),
 ('Cleysyvan'),
@@ -30,13 +50,13 @@ insert into tb_professores(pro_nome) values
 ('Mazé'),
 ('Janduir'),
 ('Cícero'),
-('Iuri');
+('Iuri');*/
 
 create table tb_cursos(
 	cur_id int auto_increment not null primary key,
     cur_nome varchar(100) not null
 );
- 
+
 
  insert into tb_cursos(cur_nome) values 
  ('Infoweb'),
@@ -48,10 +68,7 @@ create table tb_cursos(
  
 create table tb_alunos(
 	alu_id int auto_increment not null primary key,
-    alu_matricula varchar(20) not null unique,
-    alu_nome varchar(100) not null,
-    alu_email varchar(100) unique,
-    alu_data_nascimento date,
+    alu_matricula varchar(20) unique,
     alu_cur_id int,
     alu_usu_id int,
     foreign key (alu_cur_id) references tb_cursos(cur_id),
