@@ -40,17 +40,23 @@ def load_user(user_id):
 
 
 @app.route('/')
-@login_required
 def index():
     if current_user.is_authenticated:
         return render_template('index.html')
     else:
         return redirect(url_for('login'))
 
+@app.route('/professores')
+def professores():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM tb_professores JOIN tb_usuarios ON pro_usu_id = usu_id')
+    dados = cursor.fetchall()
+    return render_template('professores.html', dados=dados) 
+
 @app.route('/alunos')
 def alunos():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id')
+    cursor.execute('SELECT * FROM tb_alunos JOIN tb_cursos ON alu_cur_id = cur_id JOIN tb_usuarios ON alu_usu_id = usu_id')
     alunos = cursor.fetchall()
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
@@ -74,32 +80,50 @@ def atividades():
     return render_template('atividades.html',atividades=atividades)
 
 @app.route('/cadastro_alunos', methods=['GET','POST'])
-def cadastro_alunos():
+def cadastro_usuarios():
     cursor = mysql.connection.cursor()
     if request.method ==   'POST':
-        cursor.execute("SELECT alu_matricula,alu_email FROM tb_alunos")
+        cursor.execute("SELECT alu_matricula,usu_email FROM tb_alunos JOIN tb_usuarios ON alu_usu_id = usu_id")
         mat_ema = cursor.fetchall()
         matriculas = [row['alu_matricula'] for row in mat_ema]
-        emails = [row['alu_email'] for row in mat_ema]
+        emails = [row['usu_email'] for row in mat_ema]
+        tipo = request.form.get('tipo')
         nome = request.form['nome']
-        matricula = request.form['matricula']
         email = request.form['email']
         data_nascimento = request.form['data']
         curso = request.form.get('curso')
-        if email and matricula:
-            if email in emails and matricula in matriculas:
-                flash('Email e matrícula já cadastrados')
-                return redirect(url_for('cadastro_alunos'))
-            elif email in emails:
+        senha = generate_password_hash(os.getenv('SENHA'))
+        if tipo == 'Aluno':
+            matricula = request.form['matricula']
+            if email and matricula:
+                if email in emails and matricula in matriculas:
+                    flash('Email e matrícula já cadastrados')
+                    return redirect(url_for('cadastro_usuarios'))
+                elif email in emails:
+                    flash('Email já cadastrado')
+                    return redirect(url_for('cadastro_usuarios'))
+                elif matricula in matriculas:
+                    flash('Matrícula já cadastrada')
+                    return redirect(url_for('cadastro_usuarios'))
+            cursor.execute("INSERT INTO tb_usuarios(usu_nome,usu_email,usu_data_nascimento,usu_tipo,usu_senha) VALUES (%s,%s,%s,%s,%s)", (nome,email,data_nascimento,tipo,senha))
+            mysql.connection.commit()
+            cursor.execute('SELECT usu_id FROM tb_usuarios WHERE usu_email = %s',(email,))
+            id = cursor.fetchone()
+            cursor.execute('SELECT alu_id FROM tb_alunos JOIN tb_usuarios ON alu_usu_id = usu_id WHERE alu_usu_id = %s',(str(id['usu_id'])))
+            dados = cursor.fetchone()
+            cursor.execute('UPDATE tb_alunos SET alu_matricula = %s,alu_cur_id = %s WHERE alu_id = %s', (matricula,curso,str(dados['alu_id'])))
+            mysql.connection.commit()
+            cursor.close()
+            return redirect(url_for('alunos'))
+        elif tipo == 'Professor':
+            if email in emails:
                 flash('Email já cadastrado')
-                return redirect(url_for('cadastro_alunos'))
-            elif matricula in matriculas:
-                flash('Matrícula já cadastrada')
-                return redirect(url_for('cadastro_alunos'))
-        cursor.execute("INSERT INTO tb_alunos(alu_nome,alu_matricula,alu_email,alu_data_nascimento, alu_cur_id) VALUES (%s,%s,%s,%s,%s)", (nome,matricula,email,data_nascimento,curso))
-        mysql.connection.commit()
+                return redirect(url_for('cadastro_usuarios'))
+            cursor.execute("INSERT INTO tb_usuarios(usu_nome,usu_email,usu_data_nascimento,usu_tipo,usu_senha) VALUES (%s,%s,%s,%s,%s)", (nome,email,data_nascimento,tipo,senha))
+            mysql.connection.commit()
+            cursor.close()
+            return redirect(url_for('professores'))
         cursor.close()
-        return redirect(url_for('alunos'))
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
     return render_template('cadastro_alunos.html', cursos=cursos)

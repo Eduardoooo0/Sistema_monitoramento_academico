@@ -13,11 +13,17 @@
 {% endblock %}
 
 {% block section %}
-    <h1>Cadastro de alunos</h1>
+    <h1>Cadastro de usuários</h1>
     <hr>
     {% with messages = get_flashed_messages() %}
-    <form id="form_cad" action="{{url_for('cadastro_alunos')}}" method="post">
-        <label>Nome:</label>
+    <form id="form_cad" action="{{url_for('cadastro_usuarios')}}" method="post">
+        <label for="tipo">Tipo de usuário:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="" disabled selected>Tipo de usuário</option>
+            <option value="Professor">Professor</option>
+            <option value="Aluno">Aluno</option>
+        </select>
+        <!-- <label>Nome:</label>
         <input type="text" name="nome" placeholder="Digite o nome do aluno(a)" required>
         <label>Matricula:</label>
         <input type="text" name="matricula" placeholder="Digite a matrícula do aluno(a)" required>
@@ -32,7 +38,8 @@
                 <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
             {% endfor %}
         </select>
-        <input id="enviar" type="submit" value="Enviar">
+        <input id="enviar" type="submit" value="Enviar"> -->
+        <div id="camposAdicionais" style="display: flex; flex-direction: column;"></div>
         {% if messages %}
             {% for message in messages %}
                 <p style="color: red;">{{message}}</p>
@@ -43,4 +50,46 @@
     <div class="img_cadastro"></div>
 
     {% endwith %}
+    <script>
+        document.getElementById('tipo').addEventListener('change', function () {
+            var camposAdicionais = document.getElementById('camposAdicionais');
+            camposAdicionais.innerHTML = '';
+            if (this.value === 'Aluno') {
+                camposAdicionais.innerHTML = `
+                    <label>Nome:</label>
+                    <input type="text" name="nome" placeholder="Digite o nome do aluno(a)" required>
+                    <label>Matricula:</label>
+                    <input type="text" name="matricula" placeholder="Digite a matrícula do aluno(a)" required>
+                    <label>Email:</label>
+                    <input type="email" name="email" placeholder="Digite o email do aluno(a)" required>
+                    <label>Data de nascimento:</label>
+                    <input type="date" name="data" required>
+                    <label>Curso:</label>
+                    <select name="curso" required>
+                        <option value="" selected disabled>Selecione o curso do aluno</option>
+                        {% for curso in cursos %}
+                            <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
+                        {% endfor %}
+                    </select>
+                    <input id="enviar" type="submit" value="Enviar">
+                `;
+            }else if (this.value === 'Professor'){
+                camposAdicionais.innerHTML = `
+                    <label>Nome:</label>
+                    <input type="text" name="nome" placeholder="Digite o nome do professor(a)" required>
+                    <label>Email:</label>
+                    <input type="email" name="email" placeholder="Digite o email do professor(a)" required>
+                    <label>Data de nascimento:</label>
+                    <input type="date" name="data" required>
+                    <label>Curso:</label>
+                    <select name="curso" required>
+                        <option value="" selected disabled>Selecione o curso do professor</option>
+                        {% for curso in cursos %}
+                            <option value="{{curso.cur_id}}">{{curso.cur_nome}}</option>
+                        {% endfor %}
+                    </select>
+                    <input id="enviar" type="submit" value="Enviar">
+                `;
+            } });
+    </script>
 {% endblock %}

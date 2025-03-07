@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block aside %}
+    <br>
+    <div class="botoes">
+        <a href="{{url_for('index')}}">Inicio</a>
+        <a href="{{url_for('alunos')}}"style="background-color: black; color: white;">Alunos</a>
+        <a href="{{url_for('atividades')}}">Atividades</a>
+        <a href="{{url_for('disciplinas')}}">Disciplinas</a>
+        <a href="{{url_for('frequencia')}}">Frequência</a>
+        <a href="{{url_for('relatorios')}}">Relatórios</a>
+    </div>
+    
+{% endblock %}
+
+{% block section %}
+    <h1>Página de Professores</h1>
+    <hr>
+
+    <h1>Filtrar</h1>
+    <form id="filtro" action="{{url_for('filtrar_alunos')}}" method="post">
+        <label>Nome:</label>
+        <input type="text" name="matricula" placeholder="Digite a matrícula do professor(a)">
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Digite o email do professor(a)">
+        <label>Data de nascimento:</label>
+        <input type="date" name="data">
+        <input id="enviar" type="submit" value="Enviar">
+
+    </form>
+    <div class="box_button">
+        <a id="button" href="{{url_for('cadastro_usuarios')}}">Cadastrar professor</a>
+    </div>
+    
+    <div class="box1">
+        {% for dado in dados %}
+        <div id="box2">
+            <h2>{{dado.usu_nome}}</h2>
+            <label>Email: {{dado.usu_email}}</label><br>
+            <label>Data de nascimento: {{dado.usu_data_nascimento}}</label><br>
+
+        </div>
+        {% endfor %}
+        <br>
+    </div>
+        
+
+{% endblock %}
+    
