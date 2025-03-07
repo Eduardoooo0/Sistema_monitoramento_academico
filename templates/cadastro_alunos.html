@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block section %}
-    <h1>Cadastro de usuários</h1>
+    <h1>Cadastro de usuário:</h1>
     <hr>
     {% with messages = get_flashed_messages() %}
     <form id="form_cad" action="{{url_for('cadastro_usuarios')}}" method="post">
