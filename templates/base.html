@@ -9,12 +9,15 @@
 <body>
     <div class="container">
         <aside>
-            <div class="logo"></div>
+            <div class="logo2">
+                <img src="../static/imgs/logohuguete.png" alt="">
+            </div>
             
             {% if current_user.is_authenticated %}
                 {% if current_user.type == 'Admin' %}
                     <br>
                     <div class="botoes">
+                        <a href="{{url_for('index')}}">Início</a>
                         <a href="{{url_for('alunos')}}">Alunos</a>
                         <a href="{{url_for('atividades')}}">Atividades</a>
                         <a href="{{url_for('disciplinas')}}">Disciplinas</a>
