@@ -32,7 +32,7 @@ begin
     end if;
     
     if new.usu_tipo = 'Professor' then
-        insert into tb_Professores(pro_usu_id)
+        insert into tb_professores(pro_usu_id)
         values (new.usu_id);
     end if;
 end//
@@ -135,3 +135,57 @@ create table tb_frequencia(
     foreign key (frq_cur_id) references tb_cursos(cur_id)
 );
 
+
+delimiter //
+create function fn_calcular_media(id_alu int, id_dis int) 
+returns float 
+deterministic
+begin
+    declare media float default 0;  -- inicializa a variável
+    select sum(ate_nota * atv_peso) / sum(atv_peso) into media from tb_atividades 
+    join tb_atividades_entrega on atv_id = ate_atv_id where ate_alu_id = id_alu and atv_dis_id = id_dis;
+    return media;
+end //
+delimiter ;
+
+
+delimiter //
+create procedure registrar_nota(id_alu int, atv_data date, nota float, id_atv int)
+begin
+    insert into tb_atividades_entrega(ate_data, ate_nota, ate_atv_id, ate_alu_id) values (atv_data, nota, id_atv, id_alu);
+end //
+delimiter ;
+
+
+delimiter //
+create trigger verificar_frequencia
+before insert on tb_notas
+for each row
+begin
+    declare total_aulas int;
+    declare presencas int;
+    declare porcentagem float;
+    declare id_dis int;
+    
+    -- ajuste o nome da coluna para referenciar corretamente a atividade
+    set id_dis = (select atv_dis_id from tb_atividades join tb_atividades_entrega on ate_atv_id = atv_id where atv_id = new.not_atv_id limit 1);
+    
+    -- contar o total de aulas
+    select count(*) into total_aulas from tb_frequencia where frq_dis_id = id_dis and frq_alu_id = new.not_alu_id;
+
+    -- contar presenças
+    select count(*) into presencas from tb_frequencia where frq_dis_id = id_dis and frq_alu_id = new.not_alu_id and frq_presenca = 'presente';
+    
+    -- calcular a porcentagem de presença
+    if total_aulas > 0 then
+        set porcentagem = (presencas / total_aulas) * 100;
+    else
+        set porcentagem = 0;  -- se não houver aulas, a porcentagem é 0%
+    end if;
+    
+    -- impede a inserção se a frequência for inferior a 75%
+    if porcentagem < 60 then
+        set message_text = 'frequência insuficiente para calcular a média.';
+    end if;
+end //
+delimiter ;

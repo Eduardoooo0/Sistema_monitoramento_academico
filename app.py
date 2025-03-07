@@ -4,10 +4,11 @@ import os
 from flask_login import LoginManager, current_user, login_required,login_user, logout_user, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from pymysql import DatabaseError
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'senha'
-
 
 
 login_manager = LoginManager()
@@ -17,7 +18,11 @@ login_manager.login_view = 'user.login'
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
+<<<<<<< Updated upstream
 app.config['MYSQL_PASSWORD'] = ''
+=======
+app.config['MYSQL_PASSWORD'] = 'marcella123'
+>>>>>>> Stashed changes
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -493,13 +498,24 @@ def cadastro_entregas():
         aluno = request.form.get('aluno')
         data = request.form['data']
         nota = request.form['nota']
-        cursor.execute('INSERT INTO tb_atividades_entrega(ate_data,ate_nota,ate_atv_id,ate_alu_id) VALUES (%s,%s,%s,%s)',(data,nota,atividade,aluno))
+
+        cursor.callproc('registrar_nota', (aluno, data, nota, atividade))
+        #cursor.execute('INSERT INTO tb_atividades_entrega(ate_data,ate_nota,ate_atv_id,ate_alu_id) VALUES (%s,%s,%s,%s)',(data,nota,atividade,aluno))
         mysql.connection.commit()
 
-        cursor.execute('SELECT dis_id FROM tb_disciplinas JOIN tb_atividades ON atv_dis_id = dis_id WHERE atv_id = %s',(atividade))
+        cursor.execute('SELECT dis_id FROM tb_disciplinas JOIN tb_atividades ON atv_dis_id = dis_id WHERE atv_id = %s', (atividade,))
+        # Obtendo o resultado
         disciplina = cursor.fetchone()
-        cursor.execute('SELECT ate_alu_id,SUM(ate_nota * atv_peso)/SUM(atv_peso) AS media FROM tb_atividades JOIN tb_atividades_entrega ON atv_id = ate_atv_id WHERE ate_alu_id = %s GROUP BY ate_alu_id',(aluno))
+        # Verificando se o resultado não é None e convertendo para inteiro
+        
+        # Verificando se o resultado não é None e convertendo para inteiro
+ 
+        #cursor.execute('SELECT ate_alu_id,SUM(ate_nota * atv_peso)/SUM(atv_peso) AS media FROM tb_atividades JOIN tb_atividades_entrega ON atv_id = ate_atv_id WHERE ate_alu_id = %s GROUP BY ate_alu_id',(aluno))
+        #media = cursor.fetchone()
+        cursor.execute("SELECT fn_calcular_media(%s, %s)", (aluno, str(disciplina['dis_id'])))
         media = cursor.fetchone()
+
+
         # Verifica se a nota já existe
         cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
         resultado = cursor.fetchone()
@@ -509,10 +525,38 @@ def cadastro_entregas():
             mysql.connection.commit()
             cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
         else:
+            try:
+                # Tentando inserir na tabela
+                cursor.execute("""
+                    INSERT INTO tb_notas (not_alu_id, not_atv_id, not_dis_id, not_media)
+                    VALUES (%s, %s, %s, fn_calcular_media(%s, %s))
+                """, (aluno, atividade,  str(disciplina['dis_id']), aluno, str(disciplina['dis_id'])))
+                
+                # Comitando as mudanças
+                mysql.connection.commit()
+
+            except DatabaseError as e:
+                # Verificando se o erro é relacionado à frequência
+                if "Frequência insuficiente para calcular a média." in str(e):
+                    print("Erro: A frequência do aluno é insuficiente. Não é possível inserir a nota.")
+                    cursor.execute("""
+                        INSERT INTO tb_notas (not_alu_id, not_atv_id, not_dis_id, not_media)
+                        VALUES (%s, %s, %s, 'frequencia insuficiente')
+                    """, (aluno, atividade, disciplina))
+                    mysql.connection.commit()
+                else:
+                    print("Erro inesperado:", e)
+
+            finally:
+                # Fechando o cursor
+                cursor.close()
+
+
+
             # Insere nova nota
-            cursor.execute('INSERT INTO tb_notas(not_alu_id, not_atv_id,not_dis_id, not_media) VALUES (%s, %s, %s,%s)', (aluno, atividade, disciplina['dis_id'] ,media['media']))
-            mysql.connection.commit()
-        cursor.close()
+            #cursor.execute('INSERT INTO tb_notas(not_alu_id, not_atv_id,not_dis_id, not_media) VALUES (%s, %s, %s,%s)', (aluno, atividade, disciplina['dis_id'] ,media['media']))
+            #mysql.connection.commit()
+        #cursor.close()
         return redirect(url_for('atividades'))
     cursor.execute('SELECT * FROM tb_atividades')
     dados = cursor.fetchall()
