@@ -1,0 +1,130 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    width: 380px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.register-container {
+    width: 400px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 24px;
+}
+
+label {
+    display: block;  /* Faz com que os labels fiquem acima dos inputs */
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    display: block;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffa837;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #ffa837;
+}
+
+.extras {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin: 15px 0;
+}
+
+.forgot-password {
+    color: #ffa837;
+    text-decoration: none;
+}
+
+.flash-messages {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.social-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.social-login p {
+    font-size: 14px;
+    color: #333;
+}
+
+.social-icons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.social-icons a {
+    margin: 0 8px;
+    display: inline-block;
+}
+
+.social-icons img {
+    width: 36px;
+    height: 36px;
+    transition: transform 0.2s;
+}
+
+.social-icons img:hover {
+    transform: scale(1.1);
+}
+
+p {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    margin-top: 15px;
+}
+
+p a {
+    color: #ffa837;
+    text-decoration: none;
+    font-weight: bold;
+}

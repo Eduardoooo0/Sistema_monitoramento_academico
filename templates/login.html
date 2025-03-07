@@ -1,17 +1,32 @@
 {% extends "base.html" %}
+
 {% block section %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_auth.css') }}">
+<div class="login-container">
     {% with messages = get_flashed_messages() %}
-    <form action="{{url_for('login')}}" method="post">
-        <label for="email">Email:</label>
-        <input type="text" name="email" required> <br>
-        <label for="senha">Senha:</label>
-        <input type="password" name="senha" required><br>
         {% if messages %}
-            {% for message in messages %}
-                <p id="flashMessage" style="color: red;">{{message}}</p>
-            {% endfor %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <p class="error-message">{{ message }}</p>
+                {% endfor %}
+            </div>
         {% endif %}
-        <input type="submit" value="Enviar">
-    </form>
     {% endwith %}
+
+    <form action="{{ url_for('login') }}" method="post" class="login-form">
+        <h2>LOGIN</h2>
+        <label for="email">Email:</label>
+        <input type="text" name="email" class="input-field" required> 
+        
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" class="input-field" required>
+        
+    
+
+        <input type="submit" value="Entrar" class="btn">
+        
+        <p>Não tem uma conta? <a href="{{url_for('register')}}">Inscrever-se</a></p>
+        
+    </form>
+</div>
 {% endblock %}

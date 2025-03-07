@@ -17,7 +17,7 @@ login_manager.login_view = 'user.login'
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -572,3 +572,23 @@ def exibir_entregas():
             nomes = cursor.fetchall()
             return render_template('exibir_entregas.html',filtro=filtro,atividades=datas,nomes=nomes)
     return render_template('exibir_entregas.html',filtro='',alunos='')
+
+
+@app.route('/register', methods=['POST','GET'])
+def register():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        email = request.form['email']
+        senha = request.form['senha']
+        nome = request.form['nome']
+        tipo = request.form.get('tipo')
+        cursor.execute('SELECT * FROM tb_usuarios WHERE usu_email = %s',(email,))
+        user = cursor.fetchone()
+        if user:
+            flash('Email já cadastrado.')
+            return redirect(url_for('register'))
+        cursor.execute('INSERT INTO tb_usuarios(usu_nome,usu_email,usu_senha,usu_tipo) VALUES (%s,%s,%s,%s)',(nome,email,generate_password_hash(senha),tipo))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('login'))
+    return render_template('register.html')
