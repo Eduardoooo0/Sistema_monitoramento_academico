@@ -156,7 +156,6 @@ begin
 end //
 delimiter ;
 
-
 delimiter //
 create trigger verificar_frequencia
 before insert on tb_notas
@@ -166,6 +165,7 @@ begin
     declare presencas int;
     declare porcentagem float;
     declare id_dis int;
+    declare message_text TEXT;
     
     -- ajuste o nome da coluna para referenciar corretamente a atividade
     set id_dis = (select atv_dis_id from tb_atividades join tb_atividades_entrega on ate_atv_id = atv_id where atv_id = new.not_atv_id limit 1);
@@ -185,6 +185,7 @@ begin
     
     -- impede a inserção se a frequência for inferior a 75%
     if porcentagem < 60 then
+		
         set message_text = 'frequência insuficiente para calcular a média.';
     end if;
 end //
