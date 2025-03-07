@@ -13,16 +13,14 @@
         {% endif %}
     {% endwith %}
 
-    <form action="{{ url_for('login') }}" method="post" class="login-form">
-        <h2>LOGIN</h2>
+    <form action="{{ url_for('editar_senha') }}" method="post" class="login-form">
+        <h2>Editar senha</h2>
         <label for="email">Email:</label>
         <input type="text" name="email" class="input-field" required> 
-        
-        <label for="senha">Senha:</label>
+        <label for="senha">Nova senha:</label>
         <input type="password" name="senha" class="input-field" required>
-        
         <input type="submit" value="Entrar" class="btn">
     </form>
-    <label for="link">Esqueceu a senha?</label><a href="{{url_for('editar_senha')}}">Alterar Senha</a>
+    <label for="link">Já tem uma conta?</label><a href="{{url_for('login')}}">Entrar</a>
 </div>
 {% endblock %}

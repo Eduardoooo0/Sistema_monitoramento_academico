@@ -128,6 +128,24 @@ def cadastro_usuarios():
     cursos = cursor.fetchall()
     return render_template('cadastro_alunos.html', cursos=cursos)
 
+
+@app.route('/editar_senha',methods=['POST','GET'])
+def editar_senha():
+    cursor = mysql.connection.cursor()
+    if request.method == 'POST':
+        email = request.form['email']
+        senha = request.form['senha']
+        cursor.execute('SELECT * FROM tb_usuarios WHERE usu_email = %s',(email,))
+        dados = cursor.fetchone()
+        if dados:
+            cursor.execute('UPDATE tb_usuarios SET usu_senha = %s WHERE usu_email = %s',(generate_password_hash(senha),email))
+            mysql.connection.commit()
+            cursor.close()
+            return redirect(url_for('login'))
+        else:
+            flash('email incorreto')
+            return render_template('editar_senha.html')
+    return render_template('editar_senha.html')
 @app.route('/login', methods = ['POST','GET'])
 def login():
     cursor = mysql.connection.cursor()
