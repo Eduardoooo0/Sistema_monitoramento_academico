@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            max-width: 800px;
+            margin: 0 auto; /* Centraliza a tabela horizontalmente */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        a {
+            background: linear-gradient(to right, rgba(0, 23, 128, 0.7), rgba(0, 102, 255, 0.7));
+            color: white;
+            padding: 10px;
+            margin: 4%;
+            height: 15px;
+            text-align: center;
+            text-decoration: none;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color:rgba(0, 102, 255, 0.7);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; /* Efeito de hover nas linhas */
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <a href="{{url_for('index')}}">Início</a>
+    <br>
+    <br>
+    <h2>Logs</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Operação</th>
+                    <th>Aluno</th>
+                    <th>Disciplina</th>
+                    <th>Media</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log['log_id'] }}</td>
+                    <td>{{ log['log_operacao'] }}</td>
+                    <td>{{ log['usu_nome'] }}</td>
+                    <td>{{ log['dis_nome'] }}</td>
+                    <td>{{ log['not_media'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    
+</body>
+</html>

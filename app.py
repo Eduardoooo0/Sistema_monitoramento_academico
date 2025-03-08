@@ -18,11 +18,7 @@ login_manager.login_view = 'user.login'
 # Configurações do MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-<<<<<<< Updated upstream
-app.config['MYSQL_PASSWORD'] = ''
-=======
 app.config['MYSQL_PASSWORD'] = 'marcella123'
->>>>>>> Stashed changes
 app.config['MYSQL_DB'] = 'db_academico'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['MYSQL_SSL_DISABLE'] = True
@@ -297,7 +293,7 @@ def cadastro_disciplinas():
         mysql.connection.commit()
         cursor.close()
         return redirect(url_for('disciplinas'))
-    cursor.execute('SELECT * FROM tb_professores')
+    cursor.execute('SELECT * FROM tb_professores JOIN tb_usuarios on pro_usu_id = usu_id')
     professores = cursor.fetchall()
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
@@ -500,28 +496,18 @@ def cadastro_entregas():
         nota = request.form['nota']
 
         cursor.callproc('registrar_nota', (aluno, data, nota, atividade))
-        #cursor.execute('INSERT INTO tb_atividades_entrega(ate_data,ate_nota,ate_atv_id,ate_alu_id) VALUES (%s,%s,%s,%s)',(data,nota,atividade,aluno))
         mysql.connection.commit()
 
         cursor.execute('SELECT dis_id FROM tb_disciplinas JOIN tb_atividades ON atv_dis_id = dis_id WHERE atv_id = %s', (atividade,))
         # Obtendo o resultado
         disciplina = cursor.fetchone()
-        # Verificando se o resultado não é None e convertendo para inteiro
-        
-        # Verificando se o resultado não é None e convertendo para inteiro
- 
-        #cursor.execute('SELECT ate_alu_id,SUM(ate_nota * atv_peso)/SUM(atv_peso) AS media FROM tb_atividades JOIN tb_atividades_entrega ON atv_id = ate_atv_id WHERE ate_alu_id = %s GROUP BY ate_alu_id',(aluno))
-        #media = cursor.fetchone()
-        cursor.execute("SELECT fn_calcular_media(%s, %s)", (aluno, str(disciplina['dis_id'])))
-        media = cursor.fetchone()
-
 
         # Verifica se a nota já existe
         cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
         resultado = cursor.fetchone()
         if resultado:
             # Atualiza a nota existente
-            cursor.execute('UPDATE tb_notas SET not_media = %s WHERE not_alu_id = %s', (media['media'], aluno))
+            cursor.execute('UPDATE tb_notas SET not_media = fn_calcular_media(%s, %s) WHERE not_alu_id = %s', (aluno, str(disciplina['dis_id']), aluno))
             mysql.connection.commit()
             cursor.execute('SELECT * FROM tb_notas WHERE not_alu_id = %s', (aluno))
         else:
@@ -560,7 +546,7 @@ def cadastro_entregas():
         return redirect(url_for('atividades'))
     cursor.execute('SELECT * FROM tb_atividades')
     dados = cursor.fetchall()
-    cursor.execute('SELECT * FROM tb_alunos')
+    cursor.execute('SELECT * FROM tb_alunos JOIN tb_usuarios on alu_usu_id = usu_id')
     alunos = cursor.fetchall()
     return render_template('cadastro_entregas.html', dados=dados,alunos=alunos)
 
@@ -571,6 +557,8 @@ def frequencia():
     disciplinas = cursor.fetchall()
     cursor.execute('SELECT * FROM tb_cursos')
     cursos = cursor.fetchall()
+    cursor.execute('SELECT * FROM tb_alunos JOIN tb_usuarios on alu_usu_id = usu_id')
+    alunos = cursor.fetchall()
     if request.method == 'POST':
         forms = request.form.get('form_type')
         curso = request.form.get('curso')
@@ -595,7 +583,8 @@ def frequencia():
                 mysql.connection.commit()
             cursor.close()
             return redirect(url_for('frequencia'))
-    return render_template('frequencia.html',disciplinas=disciplinas,cursos=cursos )
+        
+    return render_template('frequencia.html',disciplinas=disciplinas,cursos=cursos, dados=alunos )
 
 
 @app.route('/relatorios')
@@ -606,7 +595,15 @@ def relatorios():
 @app.route('/exibir_media')
 def exibir_media():
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT nome,disciplina,media FROM (SELECT alu_nome AS nome,dis_nome AS disciplina,SUM(not_media) AS media FROM tb_notas JOIN tb_atividades ON not_atv_id = atv_id JOIN tb_alunos ON not_alu_id = alu_id JOIN tb_disciplinas ON not_dis_id = dis_id GROUP BY atv_bimestre, alu_nome, dis_nome) AS subquery')
+    cursor.execute('''
+        SELECT * 
+        FROM tb_notas 
+        JOIN tb_atividades ON not_atv_id = atv_id 
+        JOIN tb_alunos ON not_alu_id = alu_id 
+        JOIN tb_disciplinas ON not_dis_id = dis_id 
+        JOIN tb_usuarios ON alu_usu_id = usu_id
+    ''')
+    #cursor.execute('SELECT * FROM tb_notas JOIN tb_atividades ON not_atv_id = atv_id JOIN tb_alunos ON not_alu_id = alu_id JOIN tb_disciplinas ON not_dis_id = dis_id JOIN tb_usuario on alu_usu_id = usu_id)')
     media = cursor.fetchall()
     return render_template('exibir_media.html', media=media)
 
@@ -654,3 +651,19 @@ def register():
         cursor.close()
         return redirect(url_for('login'))
     return render_template('register.html')
+
+
+
+
+
+@app.route('/logs')
+def logs():
+
+    cursor = mysql.connection.cursor()
+
+    cursor.execute('SELECT * FROM tb_log_notas JOIN tb_disciplinas ON not_dis_id = dis_id JOIN tb_alunos on not_alu_id = alu_id JOIN tb_usuarios on alu_usu_id = usu_id')
+    logs = cursor.fetchall()
+    print(logs)
+    return render_template('logs.html', logs=logs)
+
+

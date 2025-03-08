@@ -41,7 +41,9 @@
     </form>
 
     <div class="box_button">
+        {% if current_user.type == 'Admin' %}
         <a id="button" href="{{url_for('cadastro_atividades')}}">Cadastrar atividade</a>
+        {% endif %}
         <a id="button" href="{{url_for('cadastro_entregas')}}">Cadastrar entrega de atividade</a>
     </div>
 

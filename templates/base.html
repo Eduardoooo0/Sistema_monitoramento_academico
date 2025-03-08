@@ -22,7 +22,9 @@
                         <a href="{{url_for('atividades')}}">Atividades</a>
                         <a href="{{url_for('disciplinas')}}">Disciplinas</a>
                         <!-- <a href="">Frequência</a> -->
+                        <a href="{{url_for('frequencia')}}">Frequência</a>
                         <a href="{{url_for('relatorios')}}">Relatórios</a>
+                        <a href="{{url_for('logs')}}">Logs</a>
                         <a href="{{url_for('logout')}}">Logout</a>
                     </div>
                 {% elif current_user.type == 'Professor' %}
@@ -30,11 +32,13 @@
                         <a href="{{url_for('alunos')}}">Alunos</a>
                         <a href="{{url_for('atividades')}}">Atividades</a>
                         <a href="">Frequência</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
                     </div>
                 {% else %}
                     <div class="botoes">
                         <a href="{{url_for('atividades')}}">Atividades</a>
-                        <a href="">Frequência</a>
+                        
+                        <a href="{{url_for('logout')}}">Logout</a>
                     </div>
                 {% endif %}
             {% endif %}

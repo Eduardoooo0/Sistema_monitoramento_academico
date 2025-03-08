@@ -15,7 +15,7 @@
         <select name="aluno" id="">
             <option value="" selected disabled>Selecione o aluno</option>
             {% for alu in alunos %}
-            <option value="{{alu.alu_id}}">{{alu.alu_nome}}</option>
+            <option value="{{alu.alu_id}}">{{alu.usu_nome}}</option>
             {% endfor %}
         </select>
         <label>Data de entrega:</label>

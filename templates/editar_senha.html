@@ -1,29 +1,38 @@
-{% extends "base.html" %}
-
-{% block section %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_auth.css') }}">
-<div class="login-container">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for message in messages %}
-                    <p class="error-message">{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <form action="{{ url_for('editar_senha') }}" method="post" class="login-form">
-        <h2>Editar senha</h2>
-        <label for="email">Email:</label>
-        <input type="text" name="email" class="input-field" required> 
-        <label for="senha">Nova senha:</label>
-        <input type="password" name="senha" class="input-field" required>
-        <input type="submit" value="Entrar" class="btn">
-    </form>
-    <div class="senha" style="display: flex; flex-direction: row;">
-        <label for="link">Já tem uma conta?</label><a href="{{url_for('login')}}">Entrar</a>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style_auth.css') }}">
+</head>
+<body>
     
-</div>
-{% endblock %}
+<section>
+    <div class="login-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p class="error-message">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    
+        <form action="{{ url_for('editar_senha') }}" method="post" class="login-form">
+            <h2>Editar senha</h2>
+            <label for="email">Email:</label>
+            <input type="text" name="email" class="input-field" required> 
+            <label for="senha">Nova senha:</label>
+            <input type="password" name="senha" class="input-field" required>
+            <input type="submit" value="Entrar" class="btn">
+        </form>
+        <div class="senha" style="display: flex; flex-direction: row;">
+            <label for="link">Já tem uma conta?</label><a href="{{url_for('login')}}">Entrar</a>
+        </div>
+        
+    </div>
+    </body>
+    </html>
+</section>

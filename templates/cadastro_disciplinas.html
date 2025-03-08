@@ -20,7 +20,7 @@
         <select name="professor" required>
             <option value="" selected disabled>Selecione o professor da disciplina</option>
             {% for prof in professores %}
-                <option value="{{prof.pro_id}}">{{prof.pro_nome}}</option>
+                <option value="{{prof.pro_id}}">{{prof.usu_nome}}</option>
             {% endfor %}
         </select>
         <label>Carga horária:</label>

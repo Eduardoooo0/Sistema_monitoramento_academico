@@ -4,9 +4,9 @@
     <h2>Média dos alunos:</h2>
     {% for aluno in media %}
         <div id="listar_frequencia">
-            <h2>{{ aluno.nome }}</h2>
+            <h2>{{ aluno.usu_nome }}</h2>
             <label>Média:</label>
-            <label>{{aluno.media}}</label>
+            <label>{{aluno.not_media}}</label>
         </div>
     {% endfor %}
 {% endblock %}

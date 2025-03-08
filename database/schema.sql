@@ -14,6 +14,7 @@ create table tb_usuarios(
 );
 
 
+
 create table tb_professores(
 	pro_id int auto_increment not null primary key,
     pro_usu_id int,
@@ -87,6 +88,8 @@ create table tb_disciplinas(
 );
 
 
+
+
 create table tb_atividades(
 	atv_id int auto_increment not null primary key,
     atv_titulo varchar(100) not null,
@@ -98,7 +101,6 @@ create table tb_atividades(
     atv_dis_id int,
     foreign key (atv_dis_id) references tb_disciplinas(dis_id)
 );
-
 
 create table tb_atividades_entrega(
 	ate_id int auto_increment not null primary key,
@@ -134,6 +136,7 @@ create table tb_frequencia(
     foreign key (frq_dis_id) references tb_disciplinas(dis_id),
     foreign key (frq_cur_id) references tb_cursos(cur_id)
 );
+
 
 
 delimiter //
@@ -190,3 +193,52 @@ begin
     end if;
 end //
 delimiter ;
+
+CREATE TABLE tb_log_notas (
+    log_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    log_operacao TEXT NOT NULL,
+    not_id INT,
+    not_media INT,
+    not_atv_id INT,
+    not_alu_id INT,
+    not_dis_id INT,
+    
+    -- Definindo as chaves estrangeiras corretamente
+    FOREIGN KEY (not_alu_id) REFERENCES tb_alunos(alu_id),
+    FOREIGN KEY (not_dis_id) REFERENCES tb_disciplinas(dis_id),
+    FOREIGN KEY (not_atv_id) REFERENCES tb_atividades(atv_id)  -- Presumindo que a tabela de atividades se chama tb_atividades
+);
+
+
+
+DROP TRIGGER IF EXISTS log_notas;
+DROP TRIGGER IF EXISTS log_notas_update;
+DROP TRIGGER IF EXISTS log_notas_delete;
+
+DELIMITER //
+
+CREATE TRIGGER log_notas
+AFTER INSERT ON tb_notas
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_log_notas (log_operacao, not_id, not_media, not_atv_id, not_alu_id, not_dis_id)
+    VALUES ('INSERT', NEW.not_id, NEW.not_media, NEW.not_atv_id, NEW.not_alu_id, NEW.not_dis_id);
+END//
+
+CREATE TRIGGER log_notas_update
+AFTER UPDATE ON tb_notas
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_log_notas (log_operacao, not_id, not_media, not_atv_id, not_alu_id, not_dis_id)
+    VALUES ('UPDATE', NEW.not_id, NEW.not_media, NEW.not_atv_id, NEW.not_alu_id, NEW.not_dis_id);
+END//
+
+CREATE TRIGGER log_notas_delete
+AFTER DELETE ON tb_notas
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_log_notas (log_operacao, not_id, not_media, not_atv_id, not_alu_id, not_dis_id)
+    VALUES ('DELETE', OLD.not_id, OLD.not_media, OLD.not_atv_id, OLD.not_alu_id, OLD.not_dis_id);
+END//
+
+DELIMITER ;

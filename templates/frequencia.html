@@ -28,7 +28,7 @@
             <h3 style="margin-top: 20px;">Alunos:</h3>
             {% for alu in dados %}
                 <div style="border: 1px solid black; display: flex; flex-direction: row; margin-top: 10px;padding: 1%;width: 40%;">
-                    <label for="aluno">{{ alu.alu_nome }}</label>
+                    <label for="aluno">{{ alu.usu_nome }}</label>
                     <select style="margin-left: 50%;" name="presenca_{{ alu.alu_id }}">
                         <option value="Presente">Presente</option>
                         <option value="Falta">Falta</option>
@@ -45,4 +45,5 @@
         document.getElementById('data').setAttribute('min', '2025-01-01'); // Define a data mínima como hoje
         document.getElementById('data').setAttribute('max', today); // Define a data máxima
     </script>
+
 {% endblock %}
